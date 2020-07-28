@@ -489,6 +489,7 @@ MonoBehaviour:
   turnerPrefab: {fileID: 2779509097662119726, guid: f55b054e9648b4ea2916506e22f2503a, type: 3}
   startColor: {r: 0.09853713, g: 0.4339623, b: 0.079832695, a: 0}
   endColor: {r: 0.8679245, g: 0.118725546, b: 0.118725546, a: 0}
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &1627611053
 Transform:
   m_ObjectHideFlags: 0

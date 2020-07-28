@@ -1,18 +1,26 @@
 ﻿using UnityEngine;
 
 public class Enemy : MonoBehaviour {
-    private GameObject lastTurnerGo;
+    private GameObject lastTurner;
+    private Vector3 direction;
+    private const string Directions = "nesw";
+    private static readonly Vector3[] Dirs = 
+        {Vector3.forward, Vector3.right, Vector3.back, Vector3.left};
+
+    void Start() {
+        direction = Vector3.back;
+    }
+    
     void Update() {
-        transform.Translate(Vector3.forward * (Time.deltaTime * 2f));
+        transform.Translate(direction * Time.deltaTime, Space.World);
     }
 
-    private void OnCollisionEnter(Collision other) {
-        var otherGo = other.gameObject;
-        if (otherGo != lastTurnerGo && otherGo.CompareTag("Turner")) {
-            var turner = otherGo.GetComponent<Turner>();
-            int turn = turner.direction == 'l' ? 90 : -90;
-            transform.Rotate(0, turn, 0);
-            lastTurnerGo = otherGo;
-        }
+    private void OnCollisionEnter(Collision collision) {
+        var other = collision.gameObject;
+        if (other == lastTurner || !other.CompareTag("Turner")) 
+            return;
+        var turner = other.GetComponent<Turner>();
+        direction = Dirs[Directions.IndexOf(turner.direction)];
+        lastTurner = other;
     }
 }
