@@ -2,6 +2,7 @@
 
 public class Enemy : MonoBehaviour {
     public LayerMask turnerLayerMask;
+    public float speedMetersPerSecond;
     private GameObject lastTurner;
     private Vector3 direction;
     private const string DirectionCodes = "nesw";
@@ -15,7 +16,7 @@ public class Enemy : MonoBehaviour {
     }
     
     void Update() {
-        transform.Translate(direction * Time.deltaTime, Space.World);
+        transform.Translate(direction * (speedMetersPerSecond * Time.deltaTime), Space.World);
         TurnAtTurners();
     }
 

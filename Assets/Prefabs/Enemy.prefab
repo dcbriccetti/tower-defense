@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 8923760573442019483}
   - component: {fileID: 8923760573442019484}
   - component: {fileID: 8923760573442019485}
-  - component: {fileID: 8923760573442019480}
+  - component: {fileID: -5691680304053650380}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -209,7 +209,8 @@ MonoBehaviour:
   turnerLayerMask:
     serializedVersion: 2
     m_Bits: 256
---- !u!54 &8923760573442019480
+  speedMetersPerSecond: 0.5
+--- !u!54 &-5691680304053650380
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

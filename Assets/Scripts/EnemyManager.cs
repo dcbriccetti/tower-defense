@@ -1,16 +1,16 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
+    public static EnemyManager instance;
     private readonly List<Transform> enemies = new List<Transform>();
     private float launchTime;
     public Transform enemyPrefab;
     public Vector3 startPosition;
 
     private void Start() {
+        instance = this;
         launchTime = Time.time + 1;
     }
 
@@ -22,8 +22,12 @@ public class EnemyManager : MonoBehaviour {
         }
     }
 
-    public Transform ClosestEnemyTo(Vector3 position, float within) {
+    public void Destroy(Enemy enemy) {
+        enemies.Remove(enemy.transform);
+        Destroy(enemy.gameObject);
+    }
 
+    public Transform ClosestEnemyTo(Vector3 position, float within) {
         var nearbyEnemies = enemies.Where(enemy => 
             (position - enemy.position).sqrMagnitude < within * within).ToList();
         if (nearbyEnemies.Count == 0) return null;

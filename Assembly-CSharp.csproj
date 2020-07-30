@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\Turner.cs" />
+     <Compile Include="Assets\Shell.cs" />
      <None Include="Assets\Levels\Level1.txt" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/Users/daveb/devel/unity/Tower Defense 2/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
