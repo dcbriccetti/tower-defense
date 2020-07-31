@@ -2,7 +2,8 @@
 
 public class Gun : MonoBehaviour {
     public Transform shellPrefab;
-    private EnemyManager enemyManager;
+    public float fireDelay = 0.4f;
+    public EnemyManager EnemyManager { get; private set; }
 
     private Transform gunBody;
     private Transform firePoint;
@@ -15,12 +16,12 @@ public class Gun : MonoBehaviour {
     }
 
     public void setEnemyManager(EnemyManager enemyManager) {
-        this.enemyManager = enemyManager;
+        this.EnemyManager = enemyManager;
     }
 
     void Update() {
-        if (enemyManager) {
-            var closest = enemyManager.ClosestEnemyTo(transform.position, 3);
+        if (EnemyManager) {
+            var closest = EnemyManager.ClosestEnemyTo(transform.position, 3);
             if (closest != null) {
                 gunBody.LookAt(closest);
                 FireWhenReady();
@@ -35,7 +36,7 @@ public class Gun : MonoBehaviour {
             var shellRotation = gunBody.rotation;
             var shell = Instantiate(shellPrefab, firePoint.position, shellRotation);
             shell.Rotate(Vector3.right, 90);
-            nextFireTime = Time.time + 2;
+            nextFireTime = Time.time + fireDelay;
         }
     }
 }

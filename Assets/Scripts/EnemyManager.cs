@@ -3,22 +3,25 @@ using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
-    public static EnemyManager instance;
     private readonly List<Transform> enemies = new List<Transform>();
     private float launchTime;
     public Transform enemyPrefab;
     public Vector3 startPosition;
+    public List<Vector2> Waypoints { get; set; }
 
     private void Start() {
-        instance = this;
         launchTime = Time.time + 1;
     }
 
     public void UpdateEnemies() {
         if (Time.time > launchTime) {
             var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
-            enemies.Add(Instantiate(enemyPrefab, pos, enemyPrefab.localRotation));
-            launchTime = Time.time + 5;
+            var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
+            var enemy = enemyTransform.GetComponent<Enemy>();
+            enemy.Waypoints = Waypoints;
+            enemy.Manager = this;
+            enemies.Add(enemyTransform);
+            launchTime = Time.time + 3;
         }
     }
 
@@ -31,10 +34,7 @@ public class EnemyManager : MonoBehaviour {
         var nearbyEnemies = enemies.Where(enemy => 
             (position - enemy.position).sqrMagnitude < within * within).ToList();
         if (nearbyEnemies.Count == 0) return null;
-        return nearbyEnemies.Aggregate((a, b) => {
-            var d1 = (position - a.position).sqrMagnitude;
-            var d2 = (position - b.position).sqrMagnitude;
-            return d1 < d2 ? a : b;
-        });
+        float SqMag(Transform a) => (position - a.position).sqrMagnitude;
+        return nearbyEnemies.Aggregate((a, b) => SqMag(a) < SqMag(b) ? a : b);
     }
 }
