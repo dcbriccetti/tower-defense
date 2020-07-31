@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
                     
                 var gunTransform = Instantiate(gunPrefab, pos, Quaternion.identity);
                 var gun = gunTransform.GetComponent<Gun>();
-                gun.setEnemyManager(enemyManager);
+                gun.EnemyManager = enemyManager;
             }
         }
 

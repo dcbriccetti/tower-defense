@@ -10,7 +10,7 @@ public class EnemyManager : MonoBehaviour {
     public List<Vector2> Waypoints { get; set; }
 
     private void Start() {
-        launchTime = Time.time + 1;
+        launchTime = Time.time;
     }
 
     public void UpdateEnemies() {
@@ -21,7 +21,7 @@ public class EnemyManager : MonoBehaviour {
             enemy.Waypoints = Waypoints;
             enemy.Manager = this;
             enemies.Add(enemyTransform);
-            launchTime = Time.time + 3;
+            launchTime = Time.time + 5;
         }
     }
 

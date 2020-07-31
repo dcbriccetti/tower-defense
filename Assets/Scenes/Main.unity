@@ -487,7 +487,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodePrefab: {fileID: 8375803308215883275, guid: c7e7da671b0554f41b87ed11a28e5676, type: 3}
   enemyPrefab: {fileID: 8923760573442019481, guid: b404eeece62a94ad1840f1c617cd8e6d, type: 3}
-  turnerPrefab: {fileID: 2779509097662119726, guid: f55b054e9648b4ea2916506e22f2503a, type: 3}
   gunPrefab: {fileID: 2345524691392191537, guid: 3f634bb3f74e749e48f0ce8d338b5e87, type: 3}
   startColor: {r: 0.09853713, g: 0.4339623, b: 0.079832695, a: 0}
   endColor: {r: 0.8679245, g: 0.118725546, b: 0.118725546, a: 0}
