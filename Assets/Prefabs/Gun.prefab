@@ -77,7 +77,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shellPrefab: {fileID: 2233669301825109759, guid: 499f16aac13da433c9f337d8b1061067, type: 3}
   muzzleFlashPrefab: {fileID: 6234668346270945300, guid: 8ffea97e1a76e45c096708c944b48cd0, type: 3}
-  range: 15
+  fireDelay: 0.5
+  range: 3
 --- !u!1 &2345524691697672111
 GameObject:
   m_ObjectHideFlags: 0
