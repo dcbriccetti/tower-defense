@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour {
     public Color endColor;
     public Vector3 startPosition;
     private EnemyManager enemyManager;
-    private readonly List<Vector2> waypoints = new List<Vector2>();
+    private List<Vector2> waypoints;
 
     private void Start() {
         enemyManager = GetComponent<EnemyManager>();
@@ -27,21 +27,20 @@ public class GameManager : MonoBehaviour {
 
         for (var iRow = 0; iRow < lines[0].Length; iRow++) {
             for (var iCol = 0; iCol < lines.Count; iCol++) {
-                var pos = nodePrefab.position + Vector3.right * iRow + Vector3.forward * (lines.Count - iCol - 1);
                 var symbol = lines[iCol][iRow];
                 if (symbol == '.') continue;
-                
+                var raise = "01".Contains(symbol) ? Vector3.up / 2 : Vector3.zero; 
+                var pos = nodePrefab.position + Vector3.right * iRow + Vector3.forward * (lines.Count - iCol - 1) + raise;
                 var node = Instantiate(nodePrefab, pos, nodePrefab.rotation);
                 if (symbol == '*') continue;
-                    
-                var isStart = symbol == '0';
-                var isEnd = symbol == '1';
-                node.GetComponent<Renderer>().material.color = isStart ?
-                    startColor : isEnd ? endColor : Color.blue;
-                if (isStart) {
+
+                var material = node.GetComponent<Renderer>().material;
+                if (symbol == '0') {
+                    material.color = startColor;
                     startPosition = pos;
                     startCoords = new Vector2(iRow, iCol);
-                } else if (isEnd) {
+                } else if (symbol == '1') {
+                    material.color = endColor;
                     endCoords = new Vector2(iRow, iCol);
                 }
 
@@ -53,31 +52,7 @@ public class GameManager : MonoBehaviour {
             }
         }
 
-        CreateWaypoints(lines, startCoords, endCoords);
+        waypoints = WaypointFinder.CreateWaypoints(lines, startCoords, endCoords);
     }
 
-    private void CreateWaypoints(IReadOnlyList<string> lines, Vector2 startCoords, Vector2 endCoords) {
-        var searchPos = startCoords;
-        var searchDir = Vector2.up; // Up is down
-        Vector2[] searchDirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
-
-        List<Vector2> DirsExceptOpposite() => searchDirs.Where(d => d != searchDir * -1).ToList();
-
-        Vector2 NextDir() => DirsExceptOpposite().Find(candidateDir => {
-            var candidatePos = searchPos + candidateDir;
-            var iLine = (int) candidatePos.y;
-            var iCol = (int) candidatePos.x;
-            var inBounds = iLine >= 0 && iLine < lines.Count && iCol >= 0 && iCol < lines[0].Length;
-            return inBounds && ".1".Contains(lines[iLine][iCol]);
-        });
-
-        while (searchPos != endCoords) {
-            searchPos += searchDir;
-            var nextDir = NextDir();
-            if (nextDir != searchDir) {
-                waypoints.Add(searchPos);
-                searchDir = nextDir;
-            }
-        }
-    }
 }
