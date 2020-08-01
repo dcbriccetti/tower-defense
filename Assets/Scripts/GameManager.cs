@@ -11,9 +11,9 @@ public class GameManager : MonoBehaviour {
     public Color endColor;
     public Vector3 startPosition;
     private EnemyManager enemyManager;
-    private List<Vector2> waypoints = new List<Vector2>();
+    private readonly List<Vector2> waypoints = new List<Vector2>();
 
-    void Start() {
+    private void Start() {
         enemyManager = GetComponent<EnemyManager>();
         enemyManager.enemyPrefab = enemyPrefab;
         ProcessMapFile(File.ReadAllLines("Assets/Levels/Level1.txt"));
@@ -21,13 +21,13 @@ public class GameManager : MonoBehaviour {
         enemyManager.Waypoints = waypoints;
     }
 
-    private void ProcessMapFile(string[] lines) {
-        Vector2 startCoords = Vector2.zero;
-        Vector2 endCoords = Vector2.zero;
+    private void ProcessMapFile(IReadOnlyList<string> lines) {
+        var startCoords = Vector2.zero;
+        var endCoords = Vector2.zero;
 
-        for (int iRow = 0; iRow < lines[0].Length; iRow++) {
-            for (int iCol = 0; iCol < lines.Length; iCol++) {
-                var pos = nodePrefab.position + Vector3.right * iRow + Vector3.forward * (lines.Length - iCol - 1);
+        for (var iRow = 0; iRow < lines[0].Length; iRow++) {
+            for (var iCol = 0; iCol < lines.Count; iCol++) {
+                var pos = nodePrefab.position + Vector3.right * iRow + Vector3.forward * (lines.Count - iCol - 1);
                 var symbol = lines[iCol][iRow];
                 if (symbol == '.') continue;
                 
@@ -56,24 +56,24 @@ public class GameManager : MonoBehaviour {
         CreateWaypoints(lines, startCoords, endCoords);
     }
 
-    private void CreateWaypoints(string[] lines, Vector2 startCoords, Vector2 endCoords) {
-        Vector2 searchPos = startCoords;
-        Vector2 searchDir = Vector2.up; // Up is down
+    private void CreateWaypoints(IReadOnlyList<string> lines, Vector2 startCoords, Vector2 endCoords) {
+        var searchPos = startCoords;
+        var searchDir = Vector2.up; // Up is down
         Vector2[] searchDirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
 
         List<Vector2> DirsExceptOpposite() => searchDirs.Where(d => d != searchDir * -1).ToList();
 
         Vector2 NextDir() => DirsExceptOpposite().Find(candidateDir => {
-            Vector2 candidatePos = searchPos + candidateDir;
-            int iLine = (int) candidatePos.y;
-            int iCol = (int) candidatePos.x;
-            bool inBounds = iLine >= 0 && iLine < lines.Length && iCol >= 0 && iCol < lines[0].Length;
+            var candidatePos = searchPos + candidateDir;
+            var iLine = (int) candidatePos.y;
+            var iCol = (int) candidatePos.x;
+            var inBounds = iLine >= 0 && iLine < lines.Count && iCol >= 0 && iCol < lines[0].Length;
             return inBounds && ".1".Contains(lines[iLine][iCol]);
         });
 
         while (searchPos != endCoords) {
             searchPos += searchDir;
-            Vector2 nextDir = NextDir();
+            var nextDir = NextDir();
             if (nextDir != searchDir) {
                 waypoints.Add(searchPos);
                 searchDir = nextDir;
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void Update() {
+    private void Update() {
         enemyManager.UpdateEnemies();
     }
 }

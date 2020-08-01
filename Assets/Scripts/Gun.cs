@@ -14,9 +14,10 @@ public class Gun : MonoBehaviour {
     private float nextFireTime;
     private Light flash;
     private Transform muzzleFlash;
+    public int firingForce = 800;
     private const float FlashDuration = 0.12f;
 
-    void Start() {
+    private void Start() {
         nextFireTime = Time.time + Random.Range(0f, 1f);
         gunBody = transform.Find("Body");
         firePoint = gunBody.Find("Barrel/Fire Point");
@@ -25,11 +26,11 @@ public class Gun : MonoBehaviour {
         flash = muzzleFlash.GetComponent<Light>();
     }
 
-    void Update() {
+    private void Update() {
         if (!EnemyManager) return;
         var closest = EnemyManager.ClosestEnemyTo(transform.position, range);
         if (closest != null) {
-            Vector3 aimAt = closest.position + closest.forward * .1f; // A little bit ahead
+            var aimAt = closest.position + closest.forward * .1f; // A little bit ahead
             gunBody.LookAt(aimAt);
             FireWhenReady();
         } else {
@@ -41,15 +42,15 @@ public class Gun : MonoBehaviour {
         if (Time.time < nextFireTime) return;
         muzzleFlash.position = flashPoint.position;
         flash.enabled = true;
-        StartCoroutine("TurnOffFlash");
+        StartCoroutine(nameof(TurnOffFlash));
         var shellRotation = gunBody.rotation;
         var shell = Instantiate(shellPrefab, firePoint.position, shellRotation);
         shell.Rotate(Vector3.right, 90);
-        shell.GetComponent<Rigidbody>().AddForce(gunBody.forward * 1000f);
+        shell.GetComponent<Rigidbody>().AddForce(gunBody.forward * firingForce);
         nextFireTime = Time.time + fireDelay + Random.Range(0, .1f);
     }
 
-    IEnumerator TurnOffFlash() {
+    private IEnumerator TurnOffFlash() {
         yield return new WaitForSeconds(FlashDuration);
         flash.enabled = false;
     }

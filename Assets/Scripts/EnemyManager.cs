@@ -14,15 +14,14 @@ public class EnemyManager : MonoBehaviour {
     }
 
     public void UpdateEnemies() {
-        if (Time.time > launchTime) {
-            var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
-            var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
-            var enemy = enemyTransform.GetComponent<Enemy>();
-            enemy.Waypoints = Waypoints;
-            enemy.Manager = this;
-            enemies.Add(enemyTransform);
-            launchTime = Time.time + 5;
-        }
+        if (!(Time.time > launchTime)) return;
+        var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
+        var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
+        var enemy = enemyTransform.GetComponent<Enemy>();
+        enemy.Waypoints = Waypoints;
+        enemy.Manager = this;
+        enemies.Add(enemyTransform);
+        launchTime = Time.time + 5;
     }
 
     public void Destroy(Enemy enemy) {

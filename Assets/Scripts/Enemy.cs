@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour {
     private int iNextWaypoint;
     public EnemyManager Manager { get; set; }
 
-    void Update() {
+    private void Update() {
         var waypoint = Waypoints[iNextWaypoint];
         var pos = transform.position;
         var wp3 = new Vector3(waypoint.x, pos.y, 9 - waypoint.y);

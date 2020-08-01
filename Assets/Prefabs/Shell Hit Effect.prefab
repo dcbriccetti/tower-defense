@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4178022926683999541}
   - component: {fileID: 4178022926683999538}
   - component: {fileID: 4178022926683999539}
-  - component: {fileID: -3518768871159679936}
+  - component: {fileID: 782287895275781893}
   m_Layer: 0
   m_Name: Shell Hit Effect
   m_TagString: Untagged
@@ -169,7 +169,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5.52
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4813,7 +4813,7 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &-3518768871159679936
+--- !u!114 &782287895275781893
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
