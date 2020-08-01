@@ -15,7 +15,10 @@ public class Shell : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.CompareTag("Enemy")) {
-            Instantiate(hitEffectPrefab, collision.transform.position, Quaternion.identity);
+            var he = Instantiate(hitEffectPrefab, collision.transform.position, Quaternion.identity);
+            var ps = he.GetComponent<ParticleSystem>();
+            var dir = transform.position - collision.gameObject.transform.position;
+            ps.transform.rotation = Quaternion.LookRotation(dir);
             Destroy(gameObject);
         }
     }
