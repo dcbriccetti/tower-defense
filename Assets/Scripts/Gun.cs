@@ -40,7 +40,7 @@ public class Gun : MonoBehaviour {
 
     private void FireWhenReady() {
         if (Time.time < nextFireTime) return;
-        GetComponent<AudioSource>().Play();
+        firePoint.GetComponent<AudioSource>().Play();
         muzzleFlash.position = flashPoint.position;
         flash.enabled = true;
         StartCoroutine(nameof(TurnOffFlash));
