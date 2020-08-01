@@ -80,8 +80,4 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
-
-    private void Update() {
-        enemyManager.UpdateEnemies();
-    }
 }
