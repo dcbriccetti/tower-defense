@@ -15,7 +15,7 @@ public class Gun : MonoBehaviour {
     private Light flash;
     private Transform muzzleFlash;
     public int firingForce = 800;
-    private const float FlashDuration = 0.12f;
+    private const float FlashDuration = 0.05f;
 
     private void Start() {
         nextFireTime = Time.time + Random.Range(0f, 1f);
@@ -40,6 +40,7 @@ public class Gun : MonoBehaviour {
 
     private void FireWhenReady() {
         if (Time.time < nextFireTime) return;
+        GetComponent<AudioSource>().Play();
         muzzleFlash.position = flashPoint.position;
         flash.enabled = true;
         StartCoroutine(nameof(TurnOffFlash));
