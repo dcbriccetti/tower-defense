@@ -24,7 +24,7 @@ public class EnemyManager : MonoBehaviour {
         launchTime = Time.time + 5;
     }
 
-    public void Destroy(Enemy enemy) {
+    public void Destroy(AbstractEnemy enemy) {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
     }
