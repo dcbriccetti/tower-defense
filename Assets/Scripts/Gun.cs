@@ -15,6 +15,7 @@ public class Gun : MonoBehaviour {
     private Light flash;
     private Transform muzzleFlash;
     public int firingForce = 800;
+    public int rotationSpeed = 10;
     private const float FlashDuration = 0.05f;
 
     private void Start() {
@@ -30,11 +31,11 @@ public class Gun : MonoBehaviour {
         if (!EnemyManager) return;
         var closest = EnemyManager.ClosestEnemyTo(transform.position, range);
         if (closest != null) {
-            var aimAt = closest.position + closest.forward * .1f; // A little bit ahead
-            gunBody.LookAt(aimAt);
+            Vector3 directionToTarget = closest.position - gunBody.position;
+            Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);
+            Vector3 rotation = Quaternion.Lerp(gunBody.rotation, rotationToTarget, Time.deltaTime * rotationSpeed).eulerAngles;
+            gunBody.rotation = Quaternion.Euler(0f, rotation.y, 0f);
             FireWhenReady();
-        } else {
-            gunBody.rotation = Quaternion.identity;
         }
     }
 

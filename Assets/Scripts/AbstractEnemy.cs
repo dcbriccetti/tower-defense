@@ -1,3 +1,4 @@
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
 
@@ -18,5 +19,11 @@
                     Manager.Destroy(this);
 
             transform.Translate(toWaypoint.normalized * (speedMetersPerSecond * Time.deltaTime), Space.World);
+        }
+
+        private void OnCollisionEnter(Collision collision) {
+            if (collision.gameObject.CompareTag("Projectile")) {
+                Manager.Destroy(this);
+            }
         }
     }

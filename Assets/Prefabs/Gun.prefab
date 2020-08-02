@@ -80,6 +80,7 @@ MonoBehaviour:
   fireDelay: 2
   range: 3
   firingForce: 600
+  rotationSpeed: 6
 --- !u!1 &2345524691697672111
 GameObject:
   m_ObjectHideFlags: 0
