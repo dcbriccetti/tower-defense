@@ -291,13 +291,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.2506467, y: -0, z: -0, w: 0.9680787}
-  m_LocalPosition: {x: 4.22, y: 4.25, z: -3.69}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 10, y: 8.94, z: -5.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 29.032, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!850595691 &1626413856
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -391,8 +391,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundPrefab: {fileID: 3643645366856132891, guid: d9e76b143120a4253a9d6906ed3e8fe0, type: 3}
   nodePrefab: {fileID: 8375803308215883275, guid: c7e7da671b0554f41b87ed11a28e5676, type: 3}
-  enemyPrefab: {fileID: 8923760573442019481, guid: b404eeece62a94ad1840f1c617cd8e6d, type: 3}
-  gunPrefab: {fileID: 2345524691392191537, guid: 3f634bb3f74e749e48f0ce8d338b5e87, type: 3}
   camera: {fileID: 963194228}
   startColor: {r: 0.09853713, g: 0.4339623, b: 0.079832695, a: 0}
   endColor: {r: 0.8679245, g: 0.118725546, b: 0.118725546, a: 0}
@@ -423,5 +421,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a625ea3ae4ed4989aaa059e72fb2f754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 8923760573442019481, guid: b404eeece62a94ad1840f1c617cd8e6d, type: 3}
   startPosition: {x: 0, y: 0, z: 0}

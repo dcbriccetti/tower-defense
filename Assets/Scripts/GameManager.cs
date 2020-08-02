@@ -6,9 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public Transform groundPrefab;
     public Transform nodePrefab;
-    public Transform enemyPrefab;
-    public Transform gunPrefab;
-    public Transform camera;
+    public new Transform camera;
     public Color startColor;
     public Color endColor;
     public Vector3 startPosition;
@@ -18,7 +16,6 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         enemyManager = GetComponent<EnemyManager>();
-        enemyManager.enemyPrefab = enemyPrefab;
         var lines = File.ReadAllLines("Assets/Levels/Level1.txt");
         ProcessMapFile(lines);
         var ground = Instantiate(groundPrefab);
@@ -46,10 +43,10 @@ public class GameManager : MonoBehaviour {
                 if (symbol == '.') continue;
                 var raise = "01".Contains(symbol) ? Vector3.up / 2 : Vector3.zero; 
                 var pos = nodePrefab.position + Vector3.right * iCol + Vector3.forward * (lines.Count - iRow - 1) + raise;
-                var node = Instantiate(nodePrefab, pos, nodePrefab.rotation);
+                var nodeObject = Instantiate(nodePrefab, pos, nodePrefab.rotation);
                 if (symbol == '*') continue;
 
-                var material = node.GetComponent<Renderer>().material;
+                var material = nodeObject.GetComponent<Renderer>().material;
                 if (symbol == '0') {
                     material.color = startColor;
                     startPosition = pos;
@@ -59,11 +56,9 @@ public class GameManager : MonoBehaviour {
                     endCoords = new Vector2(iCol, iRow);
                 }
 
-                if (symbol != 'g') continue;
-                    
-                var gunTransform = Instantiate(gunPrefab, pos, Quaternion.identity);
-                var gun = gunTransform.GetComponent<Gun>();
-                gun.EnemyManager = enemyManager;
+                if (symbol == 'g') {
+                    nodeObject.GetComponent<Node>().AddGun();
+                }
             }
         }
 

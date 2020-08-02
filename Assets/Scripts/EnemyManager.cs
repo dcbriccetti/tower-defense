@@ -9,10 +9,12 @@ public class EnemyManager : MonoBehaviour {
     public Transform enemyPrefab;
     public Vector3 startPosition;
     public List<Vector2> Waypoints { get; set; }
+    public static EnemyManager instance;
     private int waveNumber;
 
     private void Start() {
         launchTime = Time.time;
+        instance = this;
     }
 
     private void Update() {
@@ -30,7 +32,6 @@ public class EnemyManager : MonoBehaviour {
             var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
             var enemy = enemyTransform.GetComponent<Enemy>();
             enemy.Waypoints = Waypoints;
-            enemy.Manager = this;
             enemies.Add(enemyTransform);
             yield return new WaitForSeconds(.3f);
         }
