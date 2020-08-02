@@ -24,7 +24,8 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private IEnumerator LaunchWave() {
-        for (int i = 0; i < waveNumber * 5; i++) {
+        var numEnemies = waveNumber * 10;
+        for (int i = 0; i < numEnemies; i++) {
             var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
             var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
             var enemy = enemyTransform.GetComponent<Enemy>();

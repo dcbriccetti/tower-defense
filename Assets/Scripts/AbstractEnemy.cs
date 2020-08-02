@@ -11,7 +11,7 @@
         protected void Update() {
             var waypoint = Waypoints[iNextWaypoint];
             var pos = transform.position;
-            var waypoint3 = new Vector3(waypoint.x, pos.y, 9 - waypoint.y);
+            var waypoint3 = new Vector3(waypoint.x, pos.y, waypoint.y);
             transform.LookAt(waypoint3);
             var toWaypoint = waypoint3 - pos;
             if (toWaypoint.sqrMagnitude < 0.1)
