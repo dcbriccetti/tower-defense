@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WaypointFinder {
+public static class WaypointFinder {
     public static List<Vector2> CreateWaypoints(IReadOnlyList<string> lines, Vector2 startCoords, Vector2 endCoords) {
         List<Vector2> waypoints = new List<Vector2>();
         var searchPos = startCoords;
@@ -21,7 +21,7 @@ public class WaypointFinder {
             });
 
         int moves = 0;
-        var maxMoves = 100;
+        const int maxMoves = 100;
         while (searchPos != endCoords && ++moves <= maxMoves) {
             searchPos += searchDir;
             var nextDir = NextDir();

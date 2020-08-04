@@ -7,13 +7,14 @@ public class EnemyManager : MonoBehaviour {
     public Transform enemyPrefab;
     public int secondsBetweenWaves = 10;
     public int numberOfWaves = 10;
-    public int WaveNumber { get; set; }
+    public int WaveNumber { get; private set; }
     public Vector3 startPosition;
     public List<Vector2> Waypoints { get; set; }
     public int NumDestroyed { get; private set; }
     public static EnemyManager Instance;
     private readonly List<Transform> enemies = new List<Transform>();
     private Transform enemiesParentObject;
+    public float secondsBetweenEnemiesInWave = .3f;
 
     private void Start() {
         Instance = this;
@@ -37,7 +38,7 @@ public class EnemyManager : MonoBehaviour {
             var enemy = enemyTransform.GetComponent<Enemy>();
             enemy.Waypoints = Waypoints;
             enemies.Add(enemyTransform);
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(secondsBetweenEnemiesInWave);
         }
     }
 

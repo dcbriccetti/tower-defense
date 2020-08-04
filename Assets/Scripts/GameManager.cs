@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -32,7 +31,6 @@ public class GameManager : MonoBehaviour {
 
     private void Update() {
         statusText.text = $"Destroyed: {enemyManager.NumDestroyed}, Wave: {enemyManager.WaveNumber}, ${dollars}";
-        
     }
 
     private void PositionCamera() {
@@ -58,22 +56,23 @@ public class GameManager : MonoBehaviour {
                 if (symbol == '*') continue;
 
                 var material = nodeObject.GetComponent<Renderer>().material;
-                if (symbol == '0') {
-                    material.color = startColor;
-                    startPosition = pos;
-                    startCoords = new Vector2(iCol, iRow);
-                } else if (symbol == '1') {
-                    material.color = endColor;
-                    endCoords = new Vector2(iCol, iRow);
-                }
-
-                if (symbol == 'g') {
-                    nodeObject.GetComponent<Node>().AddGun();
+                switch (symbol) {
+                    case '0':
+                        material.color = startColor;
+                        startPosition = pos;
+                        startCoords = new Vector2(iCol, iRow);
+                        break;
+                    case '1':
+                        material.color = endColor;
+                        endCoords = new Vector2(iCol, iRow);
+                        break;
+                    case 'g':
+                        nodeObject.GetComponent<Node>().AddGun();
+                        break;
                 }
             }
         }
 
         waypoints = WaypointFinder.CreateWaypoints(lines, startCoords, endCoords);
     }
-
 }
