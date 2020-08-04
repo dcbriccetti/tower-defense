@@ -22,7 +22,7 @@ public class Gun : MonoBehaviour {
     }
 
     private void Update() {
-        var closest = EnemyManager.instance.ClosestEnemyTo(transform.position, range);
+        var closest = EnemyManager.Instance.ClosestEnemyTo(transform.position, range);
         if (closest != null) {
             Vector3 directionToTarget = closest.position - gunBody.position;
             Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);

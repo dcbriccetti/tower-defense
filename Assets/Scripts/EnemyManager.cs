@@ -4,24 +4,24 @@ using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
-    private readonly List<Transform> enemies = new List<Transform>();
-    private float launchTime;
     public Transform enemyPrefab;
+    public int secondsBetweenWaves = 10;
+    public int numberOfWaves = 10;
     public Vector3 startPosition;
     public List<Vector2> Waypoints { get; set; }
-    public static EnemyManager instance;
+    public static EnemyManager Instance;
+    private readonly List<Transform> enemies = new List<Transform>();
     private int waveNumber;
 
     private void Start() {
-        launchTime = Time.time;
-        instance = this;
+        Instance = this;
+        StartCoroutine(nameof(LaunchWaves));
     }
 
-    private void Update() {
-        if (Time.time > launchTime) {
-            ++waveNumber;
+    private IEnumerator LaunchWaves() {
+        for (waveNumber = 1; waveNumber <= numberOfWaves; ++waveNumber) {
             StartCoroutine(nameof(LaunchWave));
-            launchTime = Time.time + 20;
+            yield return new WaitForSeconds(secondsBetweenWaves);
         }
     }
 
