@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
     private void ProcessMapFile(IReadOnlyList<string> lines) {
         var startCoords = Vector2.zero;
         var endCoords = Vector2.zero;
+        var nodes = transform.Find("/Nodes");
 
         numRows = lines.Count;
         numCols = lines[0].Length;
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour {
                 var raise = "01".Contains(symbol) ? Vector3.up / 2 : Vector3.zero; 
                 var pos = nodePrefab.position + Vector3.right * iCol + Vector3.forward * (lines.Count - iRow - 1) + raise;
                 var nodeObject = Instantiate(nodePrefab, pos, nodePrefab.rotation);
+                nodeObject.SetParent(nodes);
                 if (symbol == '*') continue;
 
                 var material = nodeObject.GetComponent<Renderer>().material;

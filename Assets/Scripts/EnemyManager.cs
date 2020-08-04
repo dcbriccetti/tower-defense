@@ -12,10 +12,12 @@ public class EnemyManager : MonoBehaviour {
     public static EnemyManager Instance;
     private readonly List<Transform> enemies = new List<Transform>();
     private int waveNumber;
+    private Transform enemiesParentObject;
 
     private void Start() {
         Instance = this;
         StartCoroutine(nameof(LaunchWaves));
+        enemiesParentObject = transform.Find("/Enemies");
     }
 
     private IEnumerator LaunchWaves() {
@@ -30,6 +32,7 @@ public class EnemyManager : MonoBehaviour {
         for (int i = 0; i < numEnemies; i++) {
             var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
             var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
+            enemyTransform.SetParent(enemiesParentObject);
             var enemy = enemyTransform.GetComponent<Enemy>();
             enemy.Waypoints = Waypoints;
             enemies.Add(enemyTransform);
