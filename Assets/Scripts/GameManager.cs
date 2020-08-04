@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
     public Transform groundPrefab;
     public Transform nodePrefab;
+    public Text statusText;
     public new Transform camera;
     public Color startColor;
     public Color endColor;
@@ -13,6 +16,7 @@ public class GameManager : MonoBehaviour {
     private EnemyManager enemyManager;
     private List<Vector2> waypoints;
     private int numRows, numCols;
+    private int dollars = 500;
 
     private void Start() {
         enemyManager = GetComponent<EnemyManager>();
@@ -24,6 +28,11 @@ public class GameManager : MonoBehaviour {
         PositionCamera();
         enemyManager.startPosition = startPosition;
         enemyManager.Waypoints = waypoints;
+    }
+
+    private void Update() {
+        statusText.text = $"Destroyed: {enemyManager.NumDestroyed}, Wave: {enemyManager.WaveNumber}, ${dollars}";
+        
     }
 
     private void PositionCamera() {
