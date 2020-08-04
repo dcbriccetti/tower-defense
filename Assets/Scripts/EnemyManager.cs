@@ -7,11 +7,12 @@ public class EnemyManager : MonoBehaviour {
     public Transform enemyPrefab;
     public int secondsBetweenWaves = 10;
     public int numberOfWaves = 10;
+    public int WaveNumber { get; set; }
     public Vector3 startPosition;
     public List<Vector2> Waypoints { get; set; }
+    public int NumDestroyed { get; private set; }
     public static EnemyManager Instance;
     private readonly List<Transform> enemies = new List<Transform>();
-    private int waveNumber;
     private Transform enemiesParentObject;
 
     private void Start() {
@@ -21,14 +22,14 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private IEnumerator LaunchWaves() {
-        for (waveNumber = 1; waveNumber <= numberOfWaves; ++waveNumber) {
+        for (WaveNumber = 1; WaveNumber <= numberOfWaves; ++WaveNumber) {
             StartCoroutine(nameof(LaunchWave));
             yield return new WaitForSeconds(secondsBetweenWaves);
         }
     }
 
     private IEnumerator LaunchWave() {
-        var numEnemies = waveNumber * 10;
+        var numEnemies = WaveNumber * 10;
         for (int i = 0; i < numEnemies; i++) {
             var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
             var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
@@ -43,6 +44,7 @@ public class EnemyManager : MonoBehaviour {
     public void Destroy(AbstractEnemy enemy) {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
+        ++NumDestroyed;
     }
 
     public Transform ClosestEnemyTo(Vector3 position, float within) {
