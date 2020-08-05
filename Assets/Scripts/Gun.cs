@@ -6,7 +6,8 @@ public class Gun : MonoBehaviour {
     public float fireDelay = 0.5f;
     public int range = 3;
     public int firingForce = 800;
-    public int rotationSpeed = 10;
+    [Range(1, 30)]
+    public int rotationSpeed = 15;
 
     private Transform gunBody;
     private Transform firePoint;
@@ -23,17 +24,23 @@ public class Gun : MonoBehaviour {
 
     private void Update() {
         var closest = EnemyManager.Instance.ClosestEnemyTo(transform.position, range);
-        if (closest != null) {
+        if (closest == null) return;
+
+        Quaternion RotationToTarget() {
             Vector3 directionToTarget = closest.position - gunBody.position;
-            Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);
-            Vector3 rotation = Quaternion.Lerp(gunBody.rotation, rotationToTarget, Time.deltaTime * rotationSpeed).eulerAngles;
-            gunBody.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+            return Quaternion.LookRotation(directionToTarget);
+        }
+
+        Vector3 rotation = Quaternion.Lerp(gunBody.rotation, RotationToTarget(), Time.deltaTime * rotationSpeed).eulerAngles;
+        gunBody.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        
+        if (Time.time < nextFireTime && Mathf.Abs(RotationToTarget().y) < 1f) {
             FireWhenReady();
+            nextFireTime = Time.time + fireDelay + Random.Range(-.1f, .1f);
         }
     }
 
     private void FireWhenReady() {
-        if (Time.time < nextFireTime) return;
         firePoint.GetComponent<AudioSource>().Play();
         flash.enabled = true;
         StartCoroutine(nameof(TurnOffFlash));
@@ -41,7 +48,6 @@ public class Gun : MonoBehaviour {
         var shell = Instantiate(shellPrefab, firePoint.position, shellRotation);
         shell.Rotate(Vector3.right, 90);
         shell.GetComponent<Rigidbody>().AddForce(gunBody.forward * firingForce);
-        nextFireTime = Time.time + fireDelay;
     }
 
     private IEnumerator TurnOffFlash() {

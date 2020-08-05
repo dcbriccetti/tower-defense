@@ -14,14 +14,14 @@
             var toWaypoint = waypoint3 - pos;
             if (toWaypoint.sqrMagnitude < 0.1)
                 if (++iNextWaypoint == Waypoints.Count)
-                    EnemyManager.Instance.Destroy(this);
+                    EnemyManager.Instance.Destroy(this, true);
 
             transform.Translate(toWaypoint.normalized * (speedMetersPerSecond * Time.deltaTime), Space.World);
         }
 
         private void OnCollisionEnter(Collision collision) {
             if (collision.gameObject.CompareTag("Projectile")) {
-                EnemyManager.Instance.Destroy(this);
+                EnemyManager.Instance.Destroy(this, false);
             }
         }
     }

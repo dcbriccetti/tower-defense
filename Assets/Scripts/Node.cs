@@ -4,6 +4,11 @@ public class Node : MonoBehaviour
 {
     public Transform gunPrefab;
     private Transform gun;
+    private Transform guns;
+
+    private void Start() {
+        guns = transform.Find("/Guns");
+    }
 
     private void OnMouseDown() {
         if (gun == null) {
@@ -14,7 +19,7 @@ public class Node : MonoBehaviour
         }
     }
 
-    public void AddGun() {
-        gun = Instantiate(gunPrefab, transform.position, Quaternion.identity);
+    private void AddGun() {
+        Instantiate(gunPrefab, transform.position, Quaternion.identity).SetParent(guns);
     }
 }

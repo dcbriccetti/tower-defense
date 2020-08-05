@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour {
     private EnemyManager enemyManager;
     private List<Vector2> waypoints;
     private int numRows, numCols;
+    private int numEnemiesDestroyed;
+    private int numEnemiesEscaped;
     private int dollars = 500;
 
     private void Start() {
@@ -27,10 +29,17 @@ public class GameManager : MonoBehaviour {
         PositionCamera();
         enemyManager.startPosition = startPosition;
         enemyManager.Waypoints = waypoints;
+        enemyManager.AddChangeListener(OnEnemiesChange);
+        UpdateStatusText();
     }
 
-    private void Update() {
-        statusText.text = $"Destroyed: {enemyManager.NumDestroyed}, Wave: {enemyManager.WaveNumber}, ${dollars}";
+    private void UpdateStatusText() => statusText.text = 
+        $"Wave: {enemyManager.WaveNumber}, Destroyed: {numEnemiesDestroyed}, Escaped: {numEnemiesEscaped}, ${dollars}";
+
+    private void OnEnemiesChange(EnemiesChangeEvent enemiesChangeEvent) {
+        numEnemiesDestroyed = enemiesChangeEvent.NumDestroyed;
+        numEnemiesEscaped = enemiesChangeEvent.NumEscaped;
+        UpdateStatusText();
     }
 
     private void PositionCamera() {
@@ -49,7 +58,8 @@ public class GameManager : MonoBehaviour {
             for (var iCol = 0; iCol < numCols; iCol++) {
                 var symbol = lines[iRow][iCol];
                 if (symbol == '.') continue;
-                var raise = "01".Contains(symbol) ? Vector3.up / 2 : Vector3.zero; 
+                var isStartOrEnd = "01".Contains(symbol);
+                var raise = isStartOrEnd ? Vector3.up / 2 : Vector3.zero; 
                 var pos = nodePrefab.position + Vector3.right * iCol + Vector3.forward * (lines.Count - iRow - 1) + raise;
                 var nodeObject = Instantiate(nodePrefab, pos, nodePrefab.rotation);
                 nodeObject.SetParent(nodes);
@@ -65,9 +75,6 @@ public class GameManager : MonoBehaviour {
                     case '1':
                         material.color = endColor;
                         endCoords = new Vector2(iCol, iRow);
-                        break;
-                    case 'g':
-                        nodeObject.GetComponent<Node>().AddGun();
                         break;
                 }
             }
