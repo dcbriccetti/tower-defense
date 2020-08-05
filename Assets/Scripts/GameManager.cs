@@ -22,13 +22,15 @@ public class GameManager : MonoBehaviour {
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;
     private CashManager cashManager;
-    private readonly string followChildOf = null; // "/Enemies" or "/Guns"
-    private readonly string subpart = null; // "Body";
+    private Vector3 normalCameraPosition;
+    private Quaternion normalCameraRotation;
+    private CameraPositioner cameraPositioner;
 
     private void Start() {
         cashManager = new CashManager(startingCash);
         ProcessMapFile(File.ReadAllLines("Assets/Levels/Level1.txt"));
         CreateGround();
+        cameraPositioner = GetComponent<CameraPositioner>();
         PositionCamera();
         SetUpEnemyManager();
         cashManager.AddChangeListener(UpdateStatusText);
@@ -36,7 +38,13 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        CameraPositioner.PositionCameraBehindFirstChild(camera, followChildOf, subpart);
+        cameraPositioner.PositionCameraBehindFirstChild(camera);
+    }
+
+    public void ChangeView() {
+        cameraPositioner.ChangeView();
+        if (cameraPositioner.iCameraView == 0)
+            camera.SetPositionAndRotation(normalCameraPosition, normalCameraRotation);
     }
 
     private void CreateGround() {
@@ -70,7 +78,8 @@ public class GameManager : MonoBehaviour {
 
     private void PositionCamera() {
         var p = camera.position;
-        camera.position = new Vector3(numCols / 2f, p.y, p.z);
+        normalCameraPosition = camera.position = new Vector3(numCols / 2f, p.y, p.z);
+        normalCameraRotation = camera.rotation;
     }
 
     private void ProcessMapFile(IReadOnlyList<string> lines) {
