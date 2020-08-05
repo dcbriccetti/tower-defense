@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -11,34 +12,59 @@ public class GameManager : MonoBehaviour {
     public new Transform camera;
     public Color startColor;
     public Color endColor;
+    public int startingCash = 200;
+    public int cashPerKill = 5;
+    public int lossPerEscape = 5;
     public Vector3 startPosition;
     private EnemyManager enemyManager;
     private List<Vector2> waypoints;
     private int numRows, numCols;
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;
-    private int dollars = 500;
+    private CashManager cashManager;
+    private readonly string followChildOf = null; // "/Enemies" or "/Guns"
+    private readonly string subpart = null; // "Body";
 
     private void Start() {
-        enemyManager = GetComponent<EnemyManager>();
-        var lines = File.ReadAllLines("Assets/Levels/Level1.txt");
-        ProcessMapFile(lines);
-        var ground = Instantiate(groundPrefab);
-        ground.transform.localScale += Vector3.right * (numCols - 1) + Vector3.forward * (numRows - 1);
-        ground.position += Vector3.right * (numCols / 2f - .5f) + Vector3.forward * (numRows / 2f - .5f);
+        cashManager = new CashManager(startingCash);
+        ProcessMapFile(File.ReadAllLines("Assets/Levels/Level1.txt"));
+        CreateGround();
         PositionCamera();
-        enemyManager.startPosition = startPosition;
-        enemyManager.Waypoints = waypoints;
-        enemyManager.AddChangeListener(OnEnemiesChange);
+        SetUpEnemyManager();
+        cashManager.AddChangeListener(UpdateStatusText);
         UpdateStatusText();
     }
 
+    private void Update() {
+        CameraPositioner.PositionCameraBehindFirstChild(camera, followChildOf, subpart);
+    }
+
+    private void CreateGround() {
+        var ground = Instantiate(groundPrefab);
+        ground.transform.localScale += Vector3.right * (numCols - 1) + Vector3.forward * (numRows - 1);
+        ground.position += Vector3.right * (numCols / 2f - .5f) + Vector3.forward * (numRows / 2f - .5f);
+    }
+
+    private void SetUpEnemyManager() {
+        enemyManager = GetComponent<EnemyManager>();
+        enemyManager.startPosition = startPosition;
+        enemyManager.Waypoints = waypoints;
+        enemyManager.AddChangeListener(OnEnemiesChange);
+    }
+
     private void UpdateStatusText() => statusText.text = 
-        $"Wave: {enemyManager.WaveNumber}, Destroyed: {numEnemiesDestroyed}, Escaped: {numEnemiesEscaped}, ${dollars}";
+        $"Wave: <b>{enemyManager.WaveNumber}</b>, Destroyed: <b>{numEnemiesDestroyed}</b>, Escaped: <b>{numEnemiesEscaped}</b>, $<b>{cashManager.Dollars}</b>";
 
     private void OnEnemiesChange(EnemiesChangeEvent enemiesChangeEvent) {
-        numEnemiesDestroyed = enemiesChangeEvent.NumDestroyed;
-        numEnemiesEscaped = enemiesChangeEvent.NumEscaped;
+        Type eventType = enemiesChangeEvent.GetType();
+        if (eventType == typeof(EnemyDestroyed)) {
+            ++numEnemiesDestroyed;
+            cashManager.Receive(cashPerKill);
+        } else if (eventType == typeof(EnemyEscaped)) {
+            ++numEnemiesEscaped;
+            cashManager.Receive(-lossPerEscape);
+        }
+
         UpdateStatusText();
     }
 
@@ -63,6 +89,7 @@ public class GameManager : MonoBehaviour {
                 var pos = nodePrefab.position + Vector3.right * iCol + Vector3.forward * (lines.Count - iRow - 1) + raise;
                 var nodeObject = Instantiate(nodePrefab, pos, nodePrefab.rotation);
                 nodeObject.SetParent(nodes);
+                nodeObject.GetComponent<Node>().CashManager = cashManager;
                 if (symbol == '*') continue;
 
                 var material = nodeObject.GetComponent<Renderer>().material;

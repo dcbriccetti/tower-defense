@@ -32,7 +32,7 @@ public class Gun : MonoBehaviour {
         Vector3 rotation = Quaternion.Lerp(gunBody.rotation, RotationToTarget(), Time.deltaTime * rotationSpeed).eulerAngles;
         gunBody.rotation = Quaternion.Euler(0f, rotation.y, 0f);
         
-        if (Time.time > nextFireTime && Mathf.Abs(RotationToTarget().y) < .1f) {
+        if (Time.time > nextFireTime && Mathf.Abs(RotationToTarget().y) < 1) {
             Fire();
             nextFireTime = Time.time + fireDelay + Random.Range(-.1f, .1f);
         }

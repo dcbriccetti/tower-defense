@@ -12,8 +12,6 @@ public class EnemyManager : MonoBehaviour {
     public int WaveNumber { get; private set; }
     public Vector3 startPosition;
     public List<Vector2> Waypoints { private get; set; }
-    private int numDestroyed;
-    private int numEscaped;
     private readonly List<Transform> enemies = new List<Transform>();
     private Transform enemiesParentObject;
     public float secondsBetweenEnemiesInWave = .3f;
@@ -29,6 +27,7 @@ public class EnemyManager : MonoBehaviour {
         for (int i = 1; i <= numberOfWaves; i++) {
             WaveNumber = i;
             StartCoroutine(nameof(LaunchWave));
+            changeListener(new WaveStarted());
             yield return new WaitForSeconds(secondsBetweenWaves);
         }
     }
@@ -49,8 +48,7 @@ public class EnemyManager : MonoBehaviour {
     public void Destroy(AbstractEnemy enemy, bool escaped) {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
-        if (escaped) ++numEscaped; else ++numDestroyed;
-        changeListener(new EnemiesChangeEvent(numDestroyed, numEscaped));
+        changeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed());
     }
 
     public Transform ClosestEnemyTo(Vector3 position, float within) {

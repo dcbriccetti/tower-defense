@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-public class Node : MonoBehaviour
-{
+public class Node : MonoBehaviour {
     public Transform gunPrefab;
+    public CashManager CashManager { private get; set ; }
     private Transform gun;
     private Transform guns;
+    private const int GunCostInDollars = 100;
 
     private void Start() {
         guns = transform.Find("/Guns");
@@ -12,14 +13,18 @@ public class Node : MonoBehaviour
 
     private void OnMouseDown() {
         if (gun == null) {
-            AddGun();
+            if (CashManager.Buy(GunCostInDollars)) {
+                AddGun();
+            }
         } else {
+            CashManager.Receive(GunCostInDollars / 2);
             Destroy(gun.gameObject);
             gun = null;
         }
     }
 
     private void AddGun() {
-        Instantiate(gunPrefab, transform.position, Quaternion.identity).SetParent(guns);
+        gun = Instantiate(gunPrefab, transform.position, Quaternion.identity);
+        gun.SetParent(guns);
     }
 }
