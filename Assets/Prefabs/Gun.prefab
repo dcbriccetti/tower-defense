@@ -46,10 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shellPrefab: {fileID: 2233669301825109759, guid: 499f16aac13da433c9f337d8b1061067, type: 3}
-  fireDelay: 1.5
+  fireDelay: 1
   range: 3
   firingForce: 600
-  rotationSpeed: 2
+  rotationSpeed: 15
 --- !u!1 &2345524691697672111
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,7 +489,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2922961807006454289}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0

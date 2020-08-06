@@ -738,7 +738,7 @@ MonoBehaviour:
   camera: {fileID: 963194228}
   startColor: {r: 0.09853713, g: 0.4339623, b: 0.079832695, a: 0}
   endColor: {r: 0.8679245, g: 0.118725546, b: 0.118725546, a: 0}
-  startingCash: 100
+  startingCash: 200
   cashPerKill: 3
   lossPerEscape: 5
   startPosition: {x: 0, y: 0, z: 0}
@@ -769,10 +769,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8923760573442019481, guid: b404eeece62a94ad1840f1c617cd8e6d, type: 3}
-  secondsBetweenWaves: 10
+  secondsBetweenWaves: 6
   numberOfWaves: 10
   startPosition: {x: 0, y: 0, z: 0}
-  secondsBetweenEnemiesInWave: 0.3
+  secondsBetweenEnemiesInWave: 1
 --- !u!114 &1627611055
 MonoBehaviour:
   m_ObjectHideFlags: 0
