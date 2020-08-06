@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 public class CameraPositioner : MonoBehaviour {
     public class CameraViewSetting {
-        public string followChildOf;
-        public string subpart;
+        public readonly string followChildOf;
+        public readonly string subpart;
         public CameraViewSetting(string followChildOf, string subpart) {
             this.followChildOf = followChildOf;
             this.subpart = subpart;
@@ -16,18 +17,42 @@ public class CameraPositioner : MonoBehaviour {
         new CameraViewSetting("/Enemies", null),
     };
 
+    public new Transform camera;
     public int iCameraView;
+    private Vector3 desiredPosition;
+    private Quaternion desiredRotation;
+    public Vector3 normalPosition;
+    public Quaternion normalRotation;
 
-    public void PositionCameraBehindFirstChild(Transform camera) {
+    private void Start() {
+        normalPosition = desiredPosition = camera.position;
+        normalRotation  = desiredRotation = camera.rotation;
+    }
+
+    private void Update() {
+        PositionCameraBehindFirstChild();
+        UpdateCamera();
+    }
+
+    private void UpdateCamera() {
+        camera.position = Vector3.Lerp(camera.position, desiredPosition, Time.deltaTime * 3);
+        camera.rotation = Quaternion.Lerp(camera.rotation, desiredRotation, Time.deltaTime * 3);
+    }
+
+    public void PositionCameraBehindFirstChild() {
         var cvs = cameraViewSettings[iCameraView];
-        if (cvs == null) return;
+        if (cvs == null) {
+            desiredPosition = normalPosition;
+            desiredRotation = normalRotation;
+            return;
+        }
+
         Transform[] items = transform.Find(cvs.followChildOf).GetComponentsInChildren<Transform>();
         if (items.Length > 1) {
             var item = items[1];
             var part = cvs.subpart == null ? item : item.Find(cvs.subpart);
-            camera.position = part.position - part.forward + Vector3.up / 2;
-            camera.rotation = part.rotation;
-            camera.LookAt(part.position + part.forward);
+            desiredPosition = part.position - part.forward + Vector3.up / 2;
+            desiredRotation = part.rotation;
         }
     }
 

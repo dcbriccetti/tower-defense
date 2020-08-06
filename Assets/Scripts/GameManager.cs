@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour {
     public Transform nodePrefab;
     public Text statusText;
     public new Transform camera;
-    public Color startColor;
-    public Color endColor;
     public int startingCash = 200;
     public int cashPerKill = 5;
     public int lossPerEscape = 5;
@@ -22,8 +20,6 @@ public class GameManager : MonoBehaviour {
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;
     private CashManager cashManager;
-    private Vector3 normalCameraPosition;
-    private Quaternion normalCameraRotation;
     private CameraPositioner cameraPositioner;
 
     private void Start() {
@@ -37,14 +33,8 @@ public class GameManager : MonoBehaviour {
         UpdateStatusText();
     }
 
-    private void Update() {
-        cameraPositioner.PositionCameraBehindFirstChild(camera);
-    }
-
     public void ChangeView() {
         cameraPositioner.ChangeView();
-        if (cameraPositioner.iCameraView == 0)
-            camera.SetPositionAndRotation(normalCameraPosition, normalCameraRotation);
     }
 
     private void CreateGround() {
@@ -78,8 +68,8 @@ public class GameManager : MonoBehaviour {
 
     private void PositionCamera() {
         var p = camera.position;
-        normalCameraPosition = camera.position = new Vector3(numCols / 2f, p.y, p.z);
-        normalCameraRotation = camera.rotation;
+        cameraPositioner.normalPosition = camera.position = new Vector3(numCols / 2f, p.y, p.z);
+        cameraPositioner.normalRotation = camera.rotation;
     }
 
     private void ProcessMapFile(IReadOnlyList<string> lines) {
@@ -101,15 +91,12 @@ public class GameManager : MonoBehaviour {
                 nodeObject.GetComponent<Node>().CashManager = cashManager;
                 if (symbol == '*') continue;
 
-                var material = nodeObject.GetComponent<Renderer>().material;
                 switch (symbol) {
                     case '0':
-                        material.color = startColor;
                         startPosition = pos;
                         startCoords = new Vector2(iCol, iRow);
                         break;
                     case '1':
-                        material.color = endColor;
                         endCoords = new Vector2(iCol, iRow);
                         break;
                 }

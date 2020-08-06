@@ -592,8 +592,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0.06983581, b: 0.1792453, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -736,8 +736,6 @@ MonoBehaviour:
   nodePrefab: {fileID: 8375803308215883275, guid: c7e7da671b0554f41b87ed11a28e5676, type: 3}
   statusText: {fileID: 1798188782}
   camera: {fileID: 963194228}
-  startColor: {r: 0.09853713, g: 0.4339623, b: 0.079832695, a: 0}
-  endColor: {r: 0.8679245, g: 0.118725546, b: 0.118725546, a: 0}
   startingCash: 200
   cashPerKill: 3
   lossPerEscape: 5
@@ -785,6 +783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 572789da24e34ca5b28ccc693818689f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 963194228}
   iCameraView: 0
 --- !u!1 &1798188780
 GameObject:
@@ -836,7 +835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -915,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
