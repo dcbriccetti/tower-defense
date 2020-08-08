@@ -28,13 +28,11 @@ public class AbstractEnemy : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (alive && collision.gameObject.CompareTag("Projectile")) {
-            Shell shell = collision.gameObject.GetComponent<Shell>();
-            health -= shell.damage;
-            if (health <= 0) {
-                enemyManager.Destroy(this, false);
-                alive = false;
-            }
-        }
+        if (!alive || !collision.gameObject.CompareTag("Projectile")) return;
+        var shell = collision.gameObject.GetComponent<Shell>();
+        health -= shell.damage;
+        if (health > 0) return;
+        enemyManager.Destroy(this, false);
+        alive = false;
     }
 }

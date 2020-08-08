@@ -61,11 +61,12 @@
      <Compile Include="Assets\Scripts\Shell.cs" />
      <Compile Include="Assets\Scripts\EnemyManager.cs" />
      <Compile Include="Assets\Scripts\CameraPositioner.cs" />
+     <Compile Include="Assets\Scripts\WaveConfig.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\EnemyEscaped.cs" />
      <Compile Include="Assets\Scripts\AbstractEnemy.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\WaveConfig.cs" />
+     <Compile Include="Assets\Scripts\MapFileProcessor.cs" />
      <None Include="Assets\Levels\Level1.txt" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/Users/daveb/devel/unity/Tower Defense/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

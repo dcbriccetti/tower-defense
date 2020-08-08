@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class WaypointFinder {
     public static List<Vector2> CreateWaypoints(IReadOnlyList<string> lines, Vector2 startCoords, Vector2 endCoords) {
-        List<Vector2> waypoints = new List<Vector2>();
+        var waypoints = new List<Vector2>();
         var searchPos = startCoords;
         var searchDir = new Vector2(0, 1); // “Down”
         Vector2[] searchDirs = {Vector2.up, Vector2.right, Vector2.down, Vector2.left};
@@ -25,10 +25,9 @@ public static class WaypointFinder {
         while (searchPos != endCoords && ++moves <= maxMoves) {
             searchPos += searchDir;
             var nextDir = NextDir();
-            if (nextDir != searchDir) {
-                waypoints.Add(new Vector2(searchPos.x, lines.Count - 1 - searchPos.y));
-                searchDir = nextDir;
-            }
+            if (nextDir == searchDir) continue;
+            waypoints.Add(new Vector2(searchPos.x, lines.Count - 1 - searchPos.y));
+            searchDir = nextDir;
         }
 
         if (moves == maxMoves) 

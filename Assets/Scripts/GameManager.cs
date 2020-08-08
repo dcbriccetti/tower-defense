@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,18 +10,17 @@ public class GameManager : MonoBehaviour {
     public int startingCash = 200;
     public int cashPerKill = 5;
     public int lossPerEscape = 5;
-    public Vector3 startPosition;
     private EnemyManager enemyManager;
-    private List<Vector2> waypoints;
-    private int numRows, numCols;
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;
     private CashManager cashManager;
     private CameraPositioner cameraPositioner;
+    private MapFileProcessor.MapDescription map;
 
     private void Start() {
         cashManager = new CashManager(startingCash);
-        ProcessMapFile(File.ReadAllLines("Assets/Levels/Level1.txt"));
+        map = MapFileProcessor.CreateMapDescription("Assets/Levels/Level1.txt");
+        CreateNodes();
         CreateGround();
         cameraPositioner = GetComponent<CameraPositioner>();
         PositionCamera();
@@ -39,14 +35,14 @@ public class GameManager : MonoBehaviour {
 
     private void CreateGround() {
         var ground = Instantiate(groundPrefab);
-        ground.transform.localScale += Vector3.right * (numCols - 1) + Vector3.forward * (numRows - 1);
-        ground.position += Vector3.right * (numCols / 2f - .5f) + Vector3.forward * (numRows / 2f - .5f);
+        ground.transform.localScale += Vector3.right * (map.Dimensions.x - 1) + Vector3.forward * (map.Dimensions.y - 1);
+        ground.position += Vector3.right * (map.Dimensions.x / 2f - .5f) + Vector3.forward * (map.Dimensions.y / 2f - .5f);
     }
 
     private void SetUpEnemyManager() {
         enemyManager = GetComponent<EnemyManager>();
-        enemyManager.StartPosition = startPosition;
-        enemyManager.Waypoints = waypoints;
+        enemyManager.StartPosition = map.StartPosition;
+        enemyManager.Waypoints = map.Waypoints;
         enemyManager.AddChangeListener(OnEnemiesChange);
     }
 
@@ -54,13 +50,15 @@ public class GameManager : MonoBehaviour {
         $"Wave: <b>{enemyManager.WaveNumber}</b>, Destroyed: <b>{numEnemiesDestroyed}</b>, Escaped: <b>{numEnemiesEscaped}</b>, $<b>{cashManager.Dollars}</b>";
 
     private void OnEnemiesChange(EnemiesChangeEvent enemiesChangeEvent) {
-        Type eventType = enemiesChangeEvent.GetType();
-        if (eventType == typeof(EnemyDestroyed)) {
-            ++numEnemiesDestroyed;
-            cashManager.Receive(cashPerKill);
-        } else if (eventType == typeof(EnemyEscaped)) {
-            ++numEnemiesEscaped;
-            cashManager.Receive(-lossPerEscape);
+        switch (enemiesChangeEvent) {
+            case EnemyDestroyed ed:
+                ++numEnemiesDestroyed;
+                cashManager.Receive(cashPerKill);
+                break;
+            case EnemyEscaped ee:
+                ++numEnemiesEscaped;
+                cashManager.Receive(-lossPerEscape);
+                break;
         }
 
         UpdateStatusText();
@@ -68,41 +66,17 @@ public class GameManager : MonoBehaviour {
 
     private void PositionCamera() {
         var p = camera.position;
-        cameraPositioner.normalPosition = camera.position = new Vector3(numCols / 2f, p.y, p.z);
-        cameraPositioner.normalRotation = camera.rotation;
+        cameraPositioner.NormalPosition = camera.position = new Vector3(map.Dimensions.x / 2f, p.y, p.z);
+        cameraPositioner.NormalRotation = camera.rotation;
     }
 
-    private void ProcessMapFile(IReadOnlyList<string> lines) {
-        var startCoords = Vector2.zero;
-        var endCoords = Vector2.zero;
-        var nodes = transform.Find("/Nodes");
-
-        numRows = lines.Count;
-        numCols = lines[0].Length;
-        for (var iRow = 0; iRow < numRows; iRow++) {
-            for (var iCol = 0; iCol < numCols; iCol++) {
-                var symbol = lines[iRow][iCol];
-                if (symbol == '.') continue;
-                var isStartOrEnd = "01".Contains(symbol);
-                var raise = isStartOrEnd ? Vector3.up / 2 : Vector3.zero; 
-                var pos = nodePrefab.position + Vector3.right * iCol + Vector3.forward * (lines.Count - iRow - 1) + raise;
-                var nodeObject = Instantiate(nodePrefab, pos, nodePrefab.rotation);
-                nodeObject.SetParent(nodes);
-                nodeObject.GetComponent<Node>().CashManager = cashManager;
-                if (symbol == '*') continue;
-
-                switch (symbol) {
-                    case '0':
-                        startPosition = pos;
-                        startCoords = new Vector2(iCol, iRow);
-                        break;
-                    case '1':
-                        endCoords = new Vector2(iCol, iRow);
-                        break;
-                }
-            }
+    private void CreateNodes() {
+        var nodesParentObject = transform.Find("/Nodes");
+        var nodes = map.NodePositions.Select(nodePos => Instantiate(nodePrefab, nodePos, nodePrefab.rotation));
+        
+        foreach (var node in nodes) {
+            node.SetParent(nodesParentObject);
+            node.GetComponent<Node>().CashManager = cashManager;
         }
-
-        waypoints = WaypointFinder.CreateWaypoints(lines, startCoords, endCoords);
     }
 }

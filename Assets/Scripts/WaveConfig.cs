@@ -4,6 +4,5 @@
 public class WaveConfig : ScriptableObject {
     public int numEnemies;
     public float secondsBetweenEnemies;
-    public float enemySpeed;
     public Transform[] enemyPrefabs;
 }
