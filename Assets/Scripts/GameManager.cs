@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         cashManager = new CashManager(startingCash);
-        map = MapFileProcessor.CreateMapDescription("Assets/Levels/Level1.txt");
+        map = MapFileProcessor.CreateMapDescription("Level1");
         CreateNodes();
         CreateGround();
         cameraPositioner = GetComponent<CameraPositioner>();

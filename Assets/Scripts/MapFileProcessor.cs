@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using JetBrains.Annotations;
+using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -23,13 +23,13 @@ public static class MapFileProcessor {
 
     private enum MapSymbol { Start = '0', End = '1', Path = '.', Node = '*' }
 
-    public static MapDescription CreateMapDescription(string mapFilename) {
-        var mapLines = File.ReadAllLines(mapFilename);
+    public static MapDescription CreateMapDescription(string mapName) {
         var startPosition = Vector3.zero;
         var startCoords = Vector2.zero;
         var endCoords = Vector2.zero;
         var nodePositions = new List<Vector3>();
 
+        var mapLines = Resources.Load<TextAsset>($"Levels/{mapName}").text.Split('\n');
         var numRows = mapLines.Length;
         var numCols = mapLines[0].Length;
 
