@@ -6,16 +6,15 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
     public static EnemyManager Instance;
-    public Transform enemyPrefab;
+    public WaveConfig[] waveConfigs;
     public int secondsBetweenWaves = 10;
-    public int numberOfWaves = 10;
     public int WaveNumber { get; private set; }
-    public Vector3 startPosition;
+    public Vector3 StartPosition { private get; set; }
     public List<Vector2> Waypoints { private get; set; }
     private readonly List<Transform> enemies = new List<Transform>();
     private Transform enemiesParentObject;
-    public float secondsBetweenEnemiesInWave = .3f;
     private Action<EnemiesChangeEvent> changeListener;
+    private WaveConfig currentWaveConfig;
 
     private void Start() {
         Instance = this;
@@ -24,24 +23,26 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private IEnumerator LaunchWaves() {
-        for (int i = 1; i <= numberOfWaves; i++) {
-            WaveNumber = i;
+        foreach (var waveInfo in waveConfigs) {
+            currentWaveConfig = waveInfo;
+            ++WaveNumber;
             StartCoroutine(nameof(LaunchWave));
             changeListener(new WaveStarted());
-            yield return new WaitForSeconds(secondsBetweenWaves);
+            yield return new WaitForSeconds(secondsBetweenWaves + waveInfo.numEnemies * waveInfo.secondsBetweenEnemies);
         }
     }
 
     private IEnumerator LaunchWave() {
-        var numEnemies = WaveNumber * 10;
-        for (int i = 0; i < numEnemies; i++) {
-            var pos = new Vector3(startPosition.x, enemyPrefab.position.y, startPosition.z);
+        var wave = currentWaveConfig;
+        for (int i = 0; i < wave.numEnemies; i++) {
+            var enemyPrefab = wave.enemyPrefabs[0];
+            var pos = new Vector3(StartPosition.x, enemyPrefab.position.y, StartPosition.z);
             var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
             enemyTransform.SetParent(enemiesParentObject);
-            var enemy = enemyTransform.GetComponent<Enemy>();
+            var enemy = enemyTransform.GetComponent<AbstractEnemy>();
             enemy.Waypoints = Waypoints;
             enemies.Add(enemyTransform);
-            yield return new WaitForSeconds(secondsBetweenEnemiesInWave);
+            yield return new WaitForSeconds(wave.secondsBetweenEnemies);
         }
     }
 

@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour {
 
     private void SetUpEnemyManager() {
         enemyManager = GetComponent<EnemyManager>();
-        enemyManager.startPosition = startPosition;
+        enemyManager.StartPosition = startPosition;
         enemyManager.Waypoints = waypoints;
         enemyManager.AddChangeListener(OnEnemiesChange);
     }

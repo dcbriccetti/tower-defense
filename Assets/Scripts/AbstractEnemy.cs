@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AbstractEnemy : MonoBehaviour {
+    [Range(10, 200)] public int health = 100;
     public float speedMetersPerSecond;
     public List<Vector2> Waypoints { get; set; }
     private int iNextWaypoint;
     private readonly EnemyManager enemyManager = EnemyManager.Instance;
     private bool alive = true;
 
-    protected void Update() {
+    public virtual void Update() {
         if (transform.position.y < -10) { // Sometimes they fall off
             enemyManager.Destroy(this, false);
             return;
@@ -28,8 +29,12 @@ public class AbstractEnemy : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if (alive && collision.gameObject.CompareTag("Projectile")) {
-            enemyManager.Destroy(this, false);
-            alive = false;
+            Shell shell = collision.gameObject.GetComponent<Shell>();
+            health -= shell.damage;
+            if (health <= 0) {
+                enemyManager.Destroy(this, false);
+                alive = false;
+            }
         }
     }
 }
