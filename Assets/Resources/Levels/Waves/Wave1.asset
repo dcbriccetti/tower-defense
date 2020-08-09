@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numEnemies: 20
   secondsBetweenEnemies: 1
-  enemySpeed: 1
   enemyPrefabs:
   - {fileID: 8923760573442019481, guid: b404eeece62a94ad1840f1c617cd8e6d, type: 3}

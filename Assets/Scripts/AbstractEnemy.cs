@@ -18,13 +18,14 @@ public class AbstractEnemy : MonoBehaviour {
         var waypoint = Waypoints[iNextWaypoint];
         var pos = transform.position;
         var waypoint3 = new Vector3(waypoint.x, pos.y, waypoint.y);
-        transform.LookAt(waypoint3);
+        var rotTo = Quaternion.LookRotation(waypoint3 - pos);
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotTo, 8 * Time.deltaTime);
         var toWaypoint = waypoint3 - pos;
         if (toWaypoint.sqrMagnitude < 0.1)
             if (++iNextWaypoint == Waypoints.Count)
                 enemyManager.Destroy(this, true);
 
-        transform.Translate(toWaypoint.normalized * (speedMetersPerSecond * Time.deltaTime), Space.World);
+        transform.Translate(transform.forward * (speedMetersPerSecond * Time.deltaTime), Space.World);
     }
 
     private void OnCollisionEnter(Collision collision) {

@@ -1,11 +1,13 @@
 ﻿using System.Linq;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public Transform groundPrefab;
     public Transform nodePrefab;
-    public Text statusText;
+    public TextMeshProUGUI statusText;
+    public GameObject gameOverParent;
     public new Transform camera;
     public int startingCash = 200;
     public int cashPerKill = 5;
@@ -59,9 +61,20 @@ public class GameManager : MonoBehaviour {
                 ++numEnemiesEscaped;
                 cashManager.Receive(-lossPerEscape);
                 break;
+            case AllWavesCompleted awc:
+                GameOver();
+                break;
         }
 
         UpdateStatusText();
+    }
+
+    private void GameOver() {
+        gameOverParent.SetActive(true);
+    }
+
+    public void PlayAgain() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void PositionCamera() {

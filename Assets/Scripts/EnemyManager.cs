@@ -23,13 +23,15 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private IEnumerator LaunchWaves() {
-        foreach (var waveInfo in waveConfigs) {
-            currentWaveConfig = waveInfo;
+        foreach (var waveConfig in waveConfigs) {
+            currentWaveConfig = waveConfig;
             ++WaveNumber;
             StartCoroutine(nameof(LaunchWave));
             changeListener(new WaveStarted());
-            yield return new WaitForSeconds(secondsBetweenWaves + waveInfo.numEnemies * waveInfo.secondsBetweenEnemies);
+            yield return new WaitForSeconds(secondsBetweenWaves + waveConfig.numEnemies * waveConfig.secondsBetweenEnemies);
         }
+
+        StartCoroutine(nameof(EndWhenAllEnemiesAreGone));
     }
 
     private IEnumerator LaunchWave() {
@@ -50,6 +52,14 @@ public class EnemyManager : MonoBehaviour {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
         changeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed());
+    }
+
+    private IEnumerator EndWhenAllEnemiesAreGone() {
+        while (GameObject.FindGameObjectsWithTag("Enemy").Length > 0) {
+            yield return new WaitForSeconds(2);
+        }
+        yield return new WaitForSeconds(3);
+        changeListener(new AllWavesCompleted());
     }
 
     public Transform ClosestEnemyTo(Vector3 position, float within) {
