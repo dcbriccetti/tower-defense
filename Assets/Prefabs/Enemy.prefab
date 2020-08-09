@@ -208,7 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   speedMetersPerSecond: 1.5
-  rotationSpeed: 24
+  rotationSpeed: 10
 --- !u!54 &-5691680304053650380
 Rigidbody:
   m_ObjectHideFlags: 0

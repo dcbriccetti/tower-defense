@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour {
         map = MapFileProcessor.CreateMapDescription("Level1");
         CreateNodes();
         CreateGround();
+        SetCameraNormalPosition();
         cameraPositioner = GetComponent<CameraPositioner>();
-        PositionCamera();
         SetUpEnemyManager();
         cashManager.AddChangeListener(UpdateStatusText);
         UpdateStatusText();
@@ -77,19 +77,22 @@ public class GameManager : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void PositionCamera() {
-        var p = camera.position;
-        cameraPositioner.NormalPosition = camera.position = new Vector3(map.Dimensions.x / 2f, p.y, p.z);
-        cameraPositioner.NormalRotation = camera.rotation;
+    private void SetCameraNormalPosition() {
+        Vector3 p = camera.position;
+        camera.position = new Vector3(map.Dimensions.x / 2f, p.y, p.z);
     }
 
     private void CreateNodes() {
         var nodesParentObject = transform.Find("/Nodes");
-        var nodes = map.NodePositions.Select(nodePos => Instantiate(nodePrefab, nodePos, nodePrefab.rotation));
+        var nodeTransforms = map.NodePositions.Select(nodePos => Instantiate(nodePrefab, nodePos,
+            nodePrefab.rotation, nodesParentObject));
         
-        foreach (var node in nodes) {
-            node.SetParent(nodesParentObject);
-            node.GetComponent<Node>().CashManager = cashManager;
+        foreach (var nt in nodeTransforms) {
+            Node node = nt.GetComponent<Node>();
+            node.CashManager = cashManager;
+            node.IsMouseClickAllowed = IsMouseClickAllowed;
         }
     }
+    
+    private bool IsMouseClickAllowed() => cameraPositioner.IsNormalView();
 }

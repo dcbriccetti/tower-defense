@@ -1,62 +1,91 @@
+using System;
 using UnityEngine;
 
 public class CameraPositioner : MonoBehaviour {
-    public class CameraViewSetting {
-        public readonly string followChildOf;
-        public readonly string subpart;
-        public CameraViewSetting(string followChildOf, string subpart) {
-            this.followChildOf = followChildOf;
-            this.subpart = subpart;
+    private abstract class CameraView {
+        protected internal abstract void SetCamera(CameraState cameraState);
+        public abstract bool IsActive();
+    }
+
+    private class FollowItemCameraView : CameraView {
+        private readonly string tag;
+        private readonly int itemIndex;
+
+        public FollowItemCameraView(string tag, int itemIndex) {
+            this.tag = tag;
+            this.itemIndex = itemIndex;
+        }
+
+        protected internal override void SetCamera(CameraState cameraState) {
+            GameObject[] items = GetItems();
+            if (items.Length < 1) return;
+            var t = items[Math.Min(items.Length - 1, itemIndex)].transform;
+            var behindAndAbove = -t.forward + Vector3.up / 2;
+            cameraState.desiredPosition = t.position + behindAndAbove;
+            cameraState.desiredRotation = t.rotation;
+        }
+
+        private GameObject[] GetItems() => GameObject.FindGameObjectsWithTag(tag);
+
+        public override bool IsActive() => GetItems().Length > 0;
+    }
+
+    private class NormalView : CameraView {
+        protected internal override void SetCamera(CameraState cameraState) {
+            cameraState.desiredPosition = cameraState.normalPosition;
+            cameraState.desiredRotation = cameraState.normalRotation;
+        }
+
+        public override bool IsActive() => true;
+    }
+
+    private class CameraState {
+        public readonly Vector3 normalPosition;
+        public readonly Quaternion normalRotation;
+        public Vector3 desiredPosition;
+        public Quaternion desiredRotation;
+
+        public CameraState(Vector3 position, Quaternion rotation) {
+            normalPosition = desiredPosition = position;
+            normalRotation = desiredRotation = rotation;
         }
     }
 
-    public CameraViewSetting[] cameraViewSettings = {
-        null, // Normal view
-        new CameraViewSetting("/Guns", "Body"),
-        new CameraViewSetting("/Enemies", null)
-    };
-
     public new Transform camera;
-    private int iCameraView;
-    private Vector3 desiredPosition;
-    private Quaternion desiredRotation;
     [Range(1, 30)] public int positionChangeSpeed = 3;
     [Range(1, 30)] public int turnSpeed = 3;
-    public Vector3 NormalPosition { get; set; }
-    public Quaternion NormalRotation { get; set; }
+
+    private readonly CameraView[] cameraViews = {
+        new NormalView(),
+        new FollowItemCameraView("Weapon", 0),
+        new FollowItemCameraView("Enemy", 2)
+    };
+
+    private CameraState cameraState;
+    private int iCameraView;
 
     private void Start() {
-        NormalPosition = desiredPosition = camera.position;
-        NormalRotation  = desiredRotation = camera.rotation;
+        cameraState = new CameraState(camera.position, camera.rotation);
     }
 
     private void Update() {
-        PositionCameraBehindFirstChild();
-        UpdateCamera();
+        cameraViews[iCameraView].SetCamera(cameraState);
+        SmoothlyMoveAndTurnCamera();
     }
 
-    private void UpdateCamera() {
-        camera.position = Vector3.Lerp(camera.position, desiredPosition, Time.deltaTime * positionChangeSpeed);
-        camera.rotation = Quaternion.Lerp(camera.rotation, desiredRotation, Time.deltaTime * turnSpeed);
-    }
-
-    private void PositionCameraBehindFirstChild() {
-        var cvs = cameraViewSettings[iCameraView];
-        if (cvs == null) {
-            desiredPosition = NormalPosition;
-            desiredRotation = NormalRotation;
-            return;
-        }
-
-        Transform[] items = transform.Find(cvs.followChildOf).GetComponentsInChildren<Transform>();
-        if (items.Length <= 1) return;
-        var item = items[1];
-        var part = cvs.subpart == null ? item : item.Find(cvs.subpart);
-        desiredPosition = part.position - part.forward + Vector3.up / 2;
-        desiredRotation = part.rotation;
+    private void SmoothlyMoveAndTurnCamera() {
+        camera.position = Vector3.Lerp(camera.position, cameraState.desiredPosition,
+            Time.deltaTime * positionChangeSpeed);
+        camera.rotation = Quaternion.Lerp(camera.rotation, cameraState.desiredRotation, Time.deltaTime * turnSpeed);
     }
 
     public void ChangeView() {
-        iCameraView = (iCameraView + 1) % cameraViewSettings.Length;
+        var activeViewFound = false;
+        while (! activeViewFound) {
+            iCameraView = (iCameraView + 1) % cameraViews.Length;
+            if (cameraViews[iCameraView].IsActive()) activeViewFound = true;
+        }
     }
+    
+    public bool IsNormalView() => cameraViews[iCameraView].GetType() == typeof(NormalView);
 }

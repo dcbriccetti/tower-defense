@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Node : MonoBehaviour {
     public Transform gunPrefab;
     public CashManager CashManager { private get; set ; }
     private Transform gun;
     private Transform guns;
+    public Func<bool> IsMouseClickAllowed { get; set; }
     private const int GunCostInDollars = 100;
 
     private void Start() {
@@ -12,6 +14,7 @@ public class Node : MonoBehaviour {
     }
 
     private void OnMouseDown() {
+        if (! IsMouseClickAllowed()) return;
         if (gun == null) {
             if (CashManager.Buy(GunCostInDollars)) {
                 AddGun();
