@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour {
         transform.LookAt(new Vector3(w.x, transform.position.y, w.y));
     }
 
-    public void Update() {
+    public void FixedUpdate() {
         if (transform.position.y < -10) { // Sometimes they fall off
             enemyManager.Destroy(this, false);
             return;

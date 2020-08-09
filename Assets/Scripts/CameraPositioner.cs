@@ -68,7 +68,7 @@ public class CameraPositioner : MonoBehaviour {
         cameraState = new CameraState(camera.position, camera.rotation);
     }
 
-    private void Update() {
+    private void LateUpdate() {
         cameraViews[iCameraView].SetCamera(cameraState);
         SmoothlyMoveAndTurnCamera();
     }
