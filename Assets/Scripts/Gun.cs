@@ -2,11 +2,11 @@
 using UnityEngine;
 
 public class Gun : MonoBehaviour {
-    public Transform shellPrefab;
-    public float fireDelay = 0.5f;
-    [Range(1, 10)] public int range = 3;
-    public int firingForce = 800;
-    [Range(1, 30)] public int rotationSpeed = 15;
+    [SerializeField] private Transform shellPrefab;
+    [SerializeField] private float fireDelay = 0.5f;
+    [SerializeField] [Range(1, 10)] private int range = 3;
+    [SerializeField] private int firingForce = 800;
+    [SerializeField] [Range(1, 30)] private int rotationSpeed = 15;
 
     private Transform gunBody;
     private Transform firePoint;

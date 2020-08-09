@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    public Transform groundPrefab;
-    public Transform nodePrefab;
-    public TextMeshProUGUI statusText;
-    public GameObject gameOverParent;
-    public new Transform camera;
-    public int startingCash = 200;
-    public int cashPerKill = 5;
-    public int lossPerEscape = 5;
+    [SerializeField] private Transform groundPrefab;
+    [SerializeField] private Transform nodePrefab;
+    [SerializeField] private TextMeshProUGUI statusText;
+    [SerializeField] private GameObject gameOverParent;
+    [SerializeField] private new Transform camera;
+    [SerializeField] private int startingCash = 200;
+    [SerializeField] private int cashPerKill = 5;
+    [SerializeField] private int lossPerEscape = 5;
     private EnemyManager enemyManager;
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;

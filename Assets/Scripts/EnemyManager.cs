@@ -41,14 +41,14 @@ public class EnemyManager : MonoBehaviour {
             var pos = new Vector3(StartPosition.x, enemyPrefab.position.y, StartPosition.z);
             var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.rotation);
             enemyTransform.SetParent(enemiesParentObject);
-            var enemy = enemyTransform.GetComponent<AbstractEnemy>();
+            var enemy = enemyTransform.GetComponent<Enemy>();
             enemy.Waypoints = Waypoints;
             enemies.Add(enemyTransform);
             yield return new WaitForSeconds(wave.secondsBetweenEnemies);
         }
     }
 
-    public void Destroy(AbstractEnemy enemy, bool escaped) {
+    public void Destroy(Enemy enemy, bool escaped) {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
         ChangeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed());

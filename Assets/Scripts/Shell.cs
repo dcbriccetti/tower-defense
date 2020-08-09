@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
 public class Shell : MonoBehaviour {
-    public Transform hitEffectPrefab;
-    public int damage = 100;
+    [SerializeField] private Transform hitEffectPrefab;
+    [SerializeField] public int damage = 100;
     private int hits;
 
     private void Start() {

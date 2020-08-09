@@ -52,8 +52,8 @@ public class CameraPositioner : MonoBehaviour {
     }
 
     public new Transform camera;
-    [Range(1, 30)] public int positionChangeSpeed = 3;
-    [Range(1, 30)] public int turnSpeed = 3;
+    [SerializeField] [Range(1, 30)] private int positionChangeSpeed = 3;
+    [SerializeField] [Range(1, 30)] private int turnSpeed = 3;
 
     private readonly CameraView[] cameraViews = {
         new NormalView(),

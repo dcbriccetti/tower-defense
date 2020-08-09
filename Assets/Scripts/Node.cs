@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public class Node : MonoBehaviour {
-    public Transform gunPrefab;
+    [SerializeField] private Transform gunPrefab;
     public CashManager CashManager { private get; set ; }
     private Transform gun;
     private Transform guns;
