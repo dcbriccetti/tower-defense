@@ -8,6 +8,12 @@ public class AbstractEnemy : MonoBehaviour {
     private int iNextWaypoint;
     private readonly EnemyManager enemyManager = EnemyManager.Instance;
     private bool alive = true;
+    [Range(1, 30)] public int rotationSpeed = 8;
+
+    private void Start() {
+        var w = Waypoints[0];
+        transform.LookAt(new Vector3(w.x, transform.position.y, w.y));
+    }
 
     public virtual void Update() {
         if (transform.position.y < -10) { // Sometimes they fall off
@@ -18,8 +24,8 @@ public class AbstractEnemy : MonoBehaviour {
         var waypoint = Waypoints[iNextWaypoint];
         var pos = transform.position;
         var waypoint3 = new Vector3(waypoint.x, pos.y, waypoint.y);
-        var rotTo = Quaternion.LookRotation(waypoint3 - pos);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotTo, 8 * Time.deltaTime);
+        Quaternion rotTo = Quaternion.LookRotation(waypoint3 - pos);
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotTo, rotationSpeed * Time.deltaTime);
         var toWaypoint = waypoint3 - pos;
         if (toWaypoint.sqrMagnitude < 0.1)
             if (++iNextWaypoint == Waypoints.Count)

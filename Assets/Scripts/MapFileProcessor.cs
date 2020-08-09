@@ -39,7 +39,7 @@ public static class MapFileProcessor {
                 if (symbol == MapSymbol.Path) continue;
 
                 bool startOrEnd = symbol == MapSymbol.Start || symbol == MapSymbol.End;
-                Vector3 nodeRaise = startOrEnd ? Vector3.up / 2 : Vector3.zero;
+                Vector3 nodeRaise = startOrEnd ? Vector3.up * .75f : Vector3.zero;
                 Vector3 nodePos = Vector3.right * iCol + Vector3.forward * (numRows - iRow - 1) + nodeRaise;
                 nodePositions.Add(nodePos);
 

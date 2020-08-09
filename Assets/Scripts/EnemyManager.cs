@@ -39,7 +39,7 @@ public class EnemyManager : MonoBehaviour {
         for (int i = 0; i < wave.numEnemies; i++) {
             var enemyPrefab = wave.enemyPrefabs[0];
             var pos = new Vector3(StartPosition.x, enemyPrefab.position.y, StartPosition.z);
-            var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.localRotation);
+            var enemyTransform = Instantiate(enemyPrefab, pos, enemyPrefab.rotation);
             enemyTransform.SetParent(enemiesParentObject);
             var enemy = enemyTransform.GetComponent<AbstractEnemy>();
             enemy.Waypoints = Waypoints;

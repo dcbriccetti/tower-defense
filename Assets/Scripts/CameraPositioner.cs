@@ -20,6 +20,8 @@ public class CameraPositioner : MonoBehaviour {
     private int iCameraView;
     private Vector3 desiredPosition;
     private Quaternion desiredRotation;
+    [Range(1, 30)] public int positionChangeSpeed = 3;
+    [Range(1, 30)] public int turnSpeed = 3;
     public Vector3 NormalPosition { get; set; }
     public Quaternion NormalRotation { get; set; }
 
@@ -34,8 +36,8 @@ public class CameraPositioner : MonoBehaviour {
     }
 
     private void UpdateCamera() {
-        camera.position = Vector3.Lerp(camera.position, desiredPosition, Time.deltaTime * 3);
-        camera.rotation = Quaternion.Lerp(camera.rotation, desiredRotation, Time.deltaTime * 3);
+        camera.position = Vector3.Lerp(camera.position, desiredPosition, Time.deltaTime * positionChangeSpeed);
+        camera.rotation = Quaternion.Lerp(camera.rotation, desiredRotation, Time.deltaTime * turnSpeed);
     }
 
     private void PositionCameraBehindFirstChild() {
