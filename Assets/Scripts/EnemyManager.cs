@@ -13,7 +13,7 @@ public class EnemyManager : MonoBehaviour {
     public List<Vector2> Waypoints { private get; set; }
     private readonly List<Transform> enemies = new List<Transform>();
     private Transform enemiesParentObject;
-    private Action<EnemiesChangeEvent> changeListener;
+    public Action<EnemiesChangeEvent> ChangeListener { get; set; }
     private WaveConfig currentWaveConfig;
 
     private void Start() {
@@ -27,7 +27,7 @@ public class EnemyManager : MonoBehaviour {
             currentWaveConfig = waveConfig;
             ++WaveNumber;
             StartCoroutine(nameof(LaunchWave));
-            changeListener(new WaveStarted());
+            ChangeListener(new WaveStarted());
             yield return new WaitForSeconds(secondsBetweenWaves + waveConfig.numEnemies * waveConfig.secondsBetweenEnemies);
         }
 
@@ -51,7 +51,7 @@ public class EnemyManager : MonoBehaviour {
     public void Destroy(AbstractEnemy enemy, bool escaped) {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
-        changeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed());
+        ChangeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed());
     }
 
     private IEnumerator EndWhenAllEnemiesAreGone() {
@@ -59,7 +59,7 @@ public class EnemyManager : MonoBehaviour {
             yield return new WaitForSeconds(2);
         }
         yield return new WaitForSeconds(3);
-        changeListener(new AllWavesCompleted());
+        ChangeListener(new AllWavesCompleted());
     }
 
     public Transform ClosestEnemyTo(Vector3 position, float within) {
@@ -68,9 +68,5 @@ public class EnemyManager : MonoBehaviour {
         if (nearbyEnemies.Count == 0) return null;
         float SqMag(Transform a) => (position - a.position).sqrMagnitude;
         return nearbyEnemies.Aggregate((a, b) => SqMag(a) < SqMag(b) ? a : b);
-    }
-
-    public void AddChangeListener(Action<EnemiesChangeEvent> enemyCallback) {
-        changeListener = enemyCallback;
     }
 }

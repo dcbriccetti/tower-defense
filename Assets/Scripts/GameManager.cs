@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour {
         enemyManager = GetComponent<EnemyManager>();
         enemyManager.StartPosition = map.StartPosition;
         enemyManager.Waypoints = map.Waypoints;
-        enemyManager.AddChangeListener(OnEnemiesChange);
+        enemyManager.ChangeListener = OnEnemiesChange;
     }
 
     private void UpdateStatusText() => statusText.text = 
@@ -69,13 +69,21 @@ public class GameManager : MonoBehaviour {
         UpdateStatusText();
     }
 
-    private void GameOver() {
-        gameOverParent.SetActive(true);
+    private void OnNodeChangeEvent(NodeChangeEvent nodeChangeEvent) {
+        switch (nodeChangeEvent) {
+            case GunAddedToNode gan:
+                DisableInstructions();
+                break;
+        }
     }
 
-    public void PlayAgain() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    private static void DisableInstructions() {
+        foreach (var inst in GameObject.FindGameObjectsWithTag("Instructions")) inst.SetActive(false);
     }
+
+    private void GameOver() => gameOverParent.SetActive(true);
+
+    public void PlayAgain() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     private void SetCameraNormalPosition() {
         Vector3 p = camera.position;
@@ -91,6 +99,7 @@ public class GameManager : MonoBehaviour {
             Node node = nt.GetComponent<Node>();
             node.CashManager = cashManager;
             node.IsMouseClickAllowed = IsMouseClickAllowed;
+            node.NodeChangeListener = OnNodeChangeEvent;
         }
     }
     

@@ -7,6 +7,8 @@ public class Node : MonoBehaviour {
     private Transform gun;
     private Transform guns;
     public Func<bool> IsMouseClickAllowed { get; set; }
+    public Action<NodeChangeEvent> NodeChangeListener { get ; set ; }
+
     private const int GunCostInDollars = 100;
 
     private void Start() {
@@ -17,6 +19,7 @@ public class Node : MonoBehaviour {
         if (! IsMouseClickAllowed()) return;
         if (gun == null) {
             if (CashManager.Buy(GunCostInDollars)) {
+                NodeChangeListener(new GunAddedToNode());
                 AddGun();
             }
         } else {
