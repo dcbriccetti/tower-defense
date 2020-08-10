@@ -19,7 +19,7 @@ public class EnemyManager : MonoBehaviour {
     private void Start() {
         Instance = this;
         StartCoroutine(nameof(LaunchWaves));
-        enemiesParentObject = transform.Find("/Enemies");
+        enemiesParentObject = transform.Find("/Instance Containers/Enemies");
     }
 
     private IEnumerator LaunchWaves() {

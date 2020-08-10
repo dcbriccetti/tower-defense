@@ -12,7 +12,7 @@ public class Node : MonoBehaviour {
     private const int GunCostInDollars = 100;
 
     private void Start() {
-        guns = transform.Find("/Guns");
+        guns = transform.Find("/Instance Containers/Guns");
     }
 
     private void OnMouseDown() {

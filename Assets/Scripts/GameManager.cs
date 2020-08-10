@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CreateNodes() {
-        var nodesParentObject = transform.Find("/Nodes");
+        var nodesParentObject = transform.Find("/Instance Containers/Nodes");
         var nodeTransforms = map.NodePositions.Select(nodePos => Instantiate(nodePrefab, nodePos,
             nodePrefab.rotation, nodesParentObject));
         
