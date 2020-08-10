@@ -12,14 +12,10 @@ internal abstract class CameraView  {
     /// Returns whether the view is active. If there are no guns, a guns view will be inactive.
     public abstract bool IsActive();
 
-    public virtual void ProcessMouseWheelInput(float displacement) { }
-
     protected internal virtual void ProcessUpDown(int upDown) { }
-
-    public virtual void ProcessLeftRight(float leftRight) { }
 }
 
-/// A camera view that follows one of a set of tagged items (enemies, guns)
+/// A camera view that follows one of a set of tagged itemsCache (enemies, guns)
 internal class FollowItemCameraView : CameraView {
     private readonly string tag;
     private int itemIndex;
@@ -43,7 +39,8 @@ internal class FollowItemCameraView : CameraView {
     }
 
     protected internal override void ProcessUpDown(int upDown) {
-        itemIndex = Math.Max(0, itemIndex - upDown); // Up: closer to first element, Down: closer to last
+        var num = GetItems().Length;
+        itemIndex = (itemIndex + num - upDown) % num; // Up: closer to first element, Down: closer to last
     }
     
     private GameObject[] GetItems() => GameObject.FindGameObjectsWithTag(tag);

@@ -17,10 +17,10 @@ public class CameraPositioner : MonoBehaviour {
     private int iCameraView;
 
     /// Advances to the next enabled view 
-    public void ChangeView() {
+    public void ChangeView(int direction = 1) {
         var activeViewFound = false;
         while (! activeViewFound) {
-            iCameraView = (iCameraView + 1) % cameraViews.Length;
+            iCameraView = (iCameraView + cameraViews.Length + direction) % cameraViews.Length;
             if (cameraViews[iCameraView].IsActive()) activeViewFound = true;
         }
 
@@ -40,8 +40,12 @@ public class CameraPositioner : MonoBehaviour {
         var kb = Keyboard.current;
         if (kb.upArrowKey.wasPressedThisFrame)
             cameraView.ProcessUpDown(1);
-        else if (kb.downArrowKey.wasPressedThisFrame)
+        if (kb.downArrowKey.wasPressedThisFrame)
             cameraView.ProcessUpDown(-1);
+        if (kb.rightArrowKey.wasPressedThisFrame)
+            ChangeView(1);
+        if (kb.leftArrowKey.wasPressedThisFrame)
+            ChangeView(-1);
     }
 
     private void LateUpdate() {
