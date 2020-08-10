@@ -5,3 +5,5 @@ public class EnemyDestroyed : EnemiesChangeEvent { }
 public class EnemyEscaped : EnemiesChangeEvent { }
 
 public class WaveStarted : EnemiesChangeEvent { }
+
+public class AllWavesCompleted : EnemiesChangeEvent { }
