@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour {
     [SerializeField] private Transform shellPrefab;
+    [SerializeField] private int damage = 100;
     [SerializeField] private float fireDelay = 0.5f;
     [SerializeField] [Range(1, 10)] private int range = 3;
     [SerializeField] private int firingForce = 800;
@@ -19,16 +20,19 @@ public class Gun : MonoBehaviour {
         nextFireTime = Time.time + Random.Range(0f, 1f);
         gunBody = transform.Find("Body");
         firePoint = gunBody.Find("Barrel/Fire Point");
-        flash = gunBody.Find("Barrel/Muzzle Flash").GetComponent<Light>();
+        flash = firePoint.GetComponent<Light>();
         audioSource = firePoint.GetComponent<AudioSource>();
-        audioSource.volume = 0.5f;
     }
 
     private void Update() {
         var closest = EnemyManager.Instance.ClosestEnemyTo(transform.position, range);
         if (closest == null) return;
 
-        Quaternion RotationToTarget() => Quaternion.LookRotation(closest.position - gunBody.position);
+        Quaternion RotationToTarget() {
+            var aBitAhead = closest.forward * .3f;
+            return Quaternion.LookRotation((closest.position + aBitAhead) - gunBody.position);
+        }
+
         Vector3 rotation = Quaternion.Lerp(gunBody.rotation, RotationToTarget(), Time.deltaTime * rotationSpeed).eulerAngles;
         gunBody.rotation = Quaternion.Euler(0f, rotation.y, 0f);
 
@@ -42,9 +46,11 @@ public class Gun : MonoBehaviour {
         flash.enabled = true;
         StartCoroutine(nameof(TurnOffFlash));
         var shellRotation = gunBody.rotation;
-        var shell = Instantiate(shellPrefab, firePoint.position, shellRotation);
-        shell.Rotate(Vector3.right, 90);
-        shell.GetComponent<Rigidbody>().AddForce(gunBody.forward * firingForce);
+        var shellTransform = Instantiate(shellPrefab, firePoint.position, shellRotation);
+        var shell = shellTransform.GetComponent<Shell>();
+        shell.damage = damage;
+        shellTransform.Rotate(Vector3.right, 90);
+        shellTransform.GetComponent<Rigidbody>().AddForce(gunBody.forward * firingForce);
     }
 
     private IEnumerator TurnOffFlash() {

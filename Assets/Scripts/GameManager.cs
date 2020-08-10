@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour {
     private CashManager cashManager;
     private CameraPositioner cameraPositioner;
     private MapFileProcessor.MapDescription map;
-
+    private int selectedGunIndex;
+    
     private void Start() {
         cashManager = new CashManager(startingCash);
         map = MapFileProcessor.CreateMapDescription("Level1");
@@ -69,6 +70,9 @@ public class GameManager : MonoBehaviour {
         UpdateStatusText();
     }
 
+    public void ChooseSmallGun() => selectedGunIndex = 0;
+    public void ChooseCannon() => selectedGunIndex = 1;
+
     private void OnNodeChangeEvent(NodeChangeEvent nodeChangeEvent) {
         switch (nodeChangeEvent) {
             case GunAddedToNode gan:
@@ -99,9 +103,12 @@ public class GameManager : MonoBehaviour {
             Node node = nt.GetComponent<Node>();
             node.CashManager = cashManager;
             node.IsMouseClickAllowed = IsMouseClickAllowed;
+            node.SelectedGunIndex = SelectedGunIndex;
             node.NodeChangeListener = OnNodeChangeEvent;
         }
     }
     
     private bool IsMouseClickAllowed() => cameraPositioner.IsNormalView();
+    
+    private int SelectedGunIndex() => selectedGunIndex;
 }

@@ -2,17 +2,18 @@
 using UnityEngine;
 
 public class Node : MonoBehaviour {
-    [SerializeField] private Transform gunPrefab;
+    [SerializeField] private Transform[] gunPrefabs;
     public CashManager CashManager { private get; set ; }
     private Transform gun;
-    private Transform guns;
+    private Transform gunsContainer;
     public Func<bool> IsMouseClickAllowed { get; set; }
     public Action<NodeChangeEvent> NodeChangeListener { get ; set ; }
+    public Func<int> SelectedGunIndex { get ; set ; }
 
     private const int GunCostInDollars = 100;
 
     private void Start() {
-        guns = transform.Find("/Instance Containers/Guns");
+        gunsContainer = transform.Find("/Instance Containers/Guns");
     }
 
     private void OnMouseDown() {
@@ -20,7 +21,7 @@ public class Node : MonoBehaviour {
         if (gun == null) {
             if (!CashManager.Buy(GunCostInDollars)) return;
             NodeChangeListener(new GunAddedToNode());
-            gun = Instantiate(gunPrefab, transform.position, Quaternion.identity, guns);
+            gun = Instantiate(gunPrefabs[SelectedGunIndex()], transform.position, Quaternion.identity, gunsContainer);
         } else {
             CashManager.Receive(GunCostInDollars / 2);
             Destroy(gun.gameObject);

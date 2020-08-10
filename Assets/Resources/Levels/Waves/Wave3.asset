@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Wave3
   m_EditorClassIdentifier: 
   numEnemies: 40
-  secondsBetweenEnemies: 0.8
+  secondsBetweenEnemies: 0.87
   enemyPrefabs:
   - {fileID: 1341356581414471054, guid: 675502652b6264fe3847d79c804562e6, type: 3}

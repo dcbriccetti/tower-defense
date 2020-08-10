@@ -38,6 +38,7 @@ public class Enemy : MonoBehaviour {
         if (!alive || !collision.gameObject.CompareTag("Projectile")) return;
         var shell = collision.gameObject.GetComponent<Shell>();
         health -= shell.damage;
+        shell.damage = 0; // Shells have been striking twice, somehow
         if (health > 0) return;
         enemyManager.Destroy(this, false);
         alive = false;
