@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour {
 
     private void GameOver() => gameOverParent.SetActive(true);
 
-    public void PlayAgain() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public void PlayAgain() => SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Todo get the button to call this again
 
     private void SetCameraNormalPosition() {
         Vector3 p = camera.position;
