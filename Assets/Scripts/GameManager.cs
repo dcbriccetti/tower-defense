@@ -3,6 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// The top level controller for the game
+/// </summary>
 public class GameManager : MonoBehaviour {
     [SerializeField] private Transform groundPrefab;
     [SerializeField] private Transform nodePrefab;
@@ -32,9 +35,13 @@ public class GameManager : MonoBehaviour {
         UpdateStatusText();
     }
 
-    public void ChangeView() {
-        cameraPositioner.ChangeView();
-    }
+    /// <summary>
+    /// Cycles among the enabled views
+    /// </summary>
+    public void ChangeView() => cameraPositioner.ChangeView();
+
+    public void ChooseSmallGun() => selectedGunIndex = 0;
+    public void ChooseCannon() => selectedGunIndex = 1;
 
     private void CreateGround() {
         var ground = Instantiate(groundPrefab);
@@ -70,10 +77,7 @@ public class GameManager : MonoBehaviour {
         UpdateStatusText();
     }
 
-    public void ChooseSmallGun() => selectedGunIndex = 0;
-    public void ChooseCannon() => selectedGunIndex = 1;
-
-    private void OnNodeChangeEvent(NodeChangeEvent nodeChangeEvent) {
+    private static void OnNodeChangeEvent(NodeChangeEvent nodeChangeEvent) {
         switch (nodeChangeEvent) {
             case GunAddedToNode gan:
                 DisableInstructions();
