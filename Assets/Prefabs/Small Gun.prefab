@@ -401,7 +401,7 @@ MonoBehaviour:
   damage: 20
   fireDelay: 0.2
   range: 3
-  firingForce: 61
+  firingForce: 100
   rotationSpeed: 6
 --- !u!1 &8541567755026405113
 GameObject:

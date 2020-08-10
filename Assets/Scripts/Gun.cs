@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Gun : MonoBehaviour {
     [SerializeField] private Transform shellPrefab;
@@ -28,15 +30,13 @@ public class Gun : MonoBehaviour {
         var closest = EnemyManager.Instance.ClosestEnemyTo(transform.position, range);
         if (closest == null) return;
 
-        Quaternion RotationToTarget() {
-            var aBitAhead = closest.forward * .3f;
-            return Quaternion.LookRotation((closest.position + aBitAhead) - gunBody.position);
-        }
+        var aBitAhead = closest.forward * .2f;
+        var aim = closest.position + aBitAhead - gunBody.position;
+        var interpolatedRotation = Quaternion.Lerp(gunBody.rotation, Quaternion.LookRotation(aim), Time.deltaTime * rotationSpeed);
+        gunBody.rotation = interpolatedRotation;
+        var angleToAimPoint = Quaternion.Angle(Quaternion.LookRotation(aim), interpolatedRotation);
 
-        Vector3 rotation = Quaternion.Lerp(gunBody.rotation, RotationToTarget(), Time.deltaTime * rotationSpeed).eulerAngles;
-        gunBody.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-        if (!(Time.time > nextFireTime)) return;
+        if (Math.Abs(angleToAimPoint) > 10 || Time.time < nextFireTime) return;
         Fire();
         nextFireTime = Time.time + fireDelay + Random.Range(-.01f, .01f);
     }
