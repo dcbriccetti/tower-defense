@@ -18,19 +18,13 @@ public class Node : MonoBehaviour {
     private void OnMouseDown() {
         if (! IsMouseClickAllowed()) return;
         if (gun == null) {
-            if (CashManager.Buy(GunCostInDollars)) {
-                NodeChangeListener(new GunAddedToNode());
-                AddGun();
-            }
+            if (!CashManager.Buy(GunCostInDollars)) return;
+            NodeChangeListener(new GunAddedToNode());
+            gun = Instantiate(gunPrefab, transform.position, Quaternion.identity, guns);
         } else {
             CashManager.Receive(GunCostInDollars / 2);
             Destroy(gun.gameObject);
             gun = null;
         }
-    }
-
-    private void AddGun() {
-        gun = Instantiate(gunPrefab, transform.position, Quaternion.identity);
-        gun.SetParent(guns);
     }
 }
