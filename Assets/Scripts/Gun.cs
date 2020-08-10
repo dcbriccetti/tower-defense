@@ -7,6 +7,7 @@ public class Gun : MonoBehaviour {
     [SerializeField] private Transform shellPrefab;
     [SerializeField] private int damage = 100;
     [SerializeField] private float fireDelay = 0.5f;
+    [Tooltip("The range within which the gun will track and fire")]
     [SerializeField] [Range(1, 10)] private int range = 3;
     [SerializeField] private int firingForce = 800;
     [SerializeField] [Range(1, 30)] private int rotationSpeed = 15;
