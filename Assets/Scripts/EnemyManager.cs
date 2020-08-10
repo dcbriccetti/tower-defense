@@ -51,7 +51,7 @@ public class EnemyManager : MonoBehaviour {
     public void Destroy(Enemy enemy, bool escaped) {
         enemies.Remove(enemy.transform);
         Destroy(enemy.gameObject);
-        ChangeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed());
+        ChangeListener(escaped ? (EnemiesChangeEvent) new EnemyEscaped() : new EnemyDestroyed(enemy.GetComponent<Enemy>())); // todo
     }
 
     private IEnumerator EndWhenAllEnemiesAreGone() {

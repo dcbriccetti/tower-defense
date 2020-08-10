@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject gameOverParent;
     [SerializeField] private new Transform camera;
     [SerializeField] private int startingCash = 200;
-    [SerializeField] private int cashPerKill = 5;
     [SerializeField] private int lossPerEscape = 5;
     private EnemyManager enemyManager;
     private int numEnemiesDestroyed;
@@ -63,7 +62,7 @@ public class GameManager : MonoBehaviour {
         switch (enemiesChangeEvent) {
             case EnemyDestroyed ed:
                 ++numEnemiesDestroyed;
-                cashManager.Receive(cashPerKill);
+                cashManager.Receive(ed.enemy.killValue);
                 break;
             case EnemyEscaped ee:
                 ++numEnemiesEscaped;

@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 8923760573442019485}
   - component: {fileID: -5691680304053650380}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Capsule
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  killValue: 2
   speedMetersPerSecond: 1
   rotationSpeed: 8
 --- !u!54 &-5691680304053650380
