@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class CameraPositioner : MonoBehaviour {
     [SerializeField] [Range(1, 30)] private int positionChangeSpeed = 3;
@@ -46,6 +45,8 @@ public class CameraPositioner : MonoBehaviour {
             ChangeView(1);
         if (kb.leftArrowKey.wasPressedThisFrame)
             ChangeView(-1);
+        var y = Mouse.current.scroll.y.ReadValue();
+        if (Math.Abs(y) > 1e-5) cameraView.ProcessMouseWheelInput(-y / 5f);
     }
 
     private void LateUpdate() {

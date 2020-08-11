@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 /// Base class for camera views
 internal abstract class CameraView  {
@@ -12,6 +13,8 @@ internal abstract class CameraView  {
     /// Returns whether the view is active. If there are no guns, a guns view will be inactive.
     public abstract bool IsActive();
 
+    public virtual void ProcessMouseWheelInput(float displacement) { }
+
     protected internal virtual void ProcessUpDown(int upDown) { }
 }
 
@@ -19,6 +22,7 @@ internal abstract class CameraView  {
 internal class FollowItemCameraView : CameraView {
     private readonly string tag;
     private int itemIndex;
+    private float followDistance = .5f;
 
     /// <summary>
     /// Creates a camera view that can follow a moving enemy in a group of enemies,
@@ -33,7 +37,7 @@ internal class FollowItemCameraView : CameraView {
         GameObject[] items = GetItems();
         if (items.Length < 1) return;
         var item = items[Math.Min(items.Length - 1, itemIndex)].transform;
-        var behindAndAbove = -item.forward + Vector3.up / 2;
+        var behindAndAbove = followDistance * (-item.forward + Vector3.up / 2);
         cameraState.desiredPosition = item.position + behindAndAbove;
         cameraState.desiredRotation = item.rotation;
     }
@@ -42,7 +46,11 @@ internal class FollowItemCameraView : CameraView {
         var num = GetItems().Length;
         itemIndex = (itemIndex + num - upDown) % num; // Up: closer to first element, Down: closer to last
     }
-    
+
+    public override void ProcessMouseWheelInput(float displacement) {
+        followDistance = Mathf.Clamp(followDistance + displacement, 0, 10);
+    }
+
     private GameObject[] GetItems() => GameObject.FindGameObjectsWithTag(tag);
 
     public override bool IsActive() => GetItems().Length > 0;
