@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06af5fc8722be47aaa5a990d3dc6d1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Cannon
   shellPrefab: {fileID: 2233669301825109759, guid: 499f16aac13da433c9f337d8b1061067, type: 3}
   damage: 100
   fireDelay: 1

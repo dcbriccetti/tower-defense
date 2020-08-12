@@ -4,6 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Gun : MonoBehaviour {
+    public string name;
     [SerializeField] private Transform shellPrefab;
     [SerializeField] private int damage = 100;
     [SerializeField] private float fireDelay = 0.5f;

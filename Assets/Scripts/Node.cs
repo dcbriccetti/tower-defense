@@ -8,7 +8,7 @@ public class Node : MonoBehaviour {
     private Transform gunsContainer;
     public Func<bool> IsMouseClickAllowed { get; set; }
     public Action<NodeChangeEvent> NodeChangeListener { get ; set ; }
-    public Func<int> SelectedGunIndex { get ; set ; }
+    public Func<int> SelectedGunIndexProvider { get ; set ; }
 
     private const int GunCostInDollars = 100;
 
@@ -21,7 +21,7 @@ public class Node : MonoBehaviour {
         if (gun == null) {
             if (!CashManager.Buy(GunCostInDollars)) return;
             NodeChangeListener(new GunAddedToNode());
-            gun = Instantiate(gunPrefabs[SelectedGunIndex()], transform.position, Quaternion.identity, gunsContainer);
+            gun = Instantiate(gunPrefabs[SelectedGunIndexProvider()], transform.position, Quaternion.identity, gunsContainer);
         } else {
             CashManager.Receive(GunCostInDollars / 2);
             Destroy(gun.gameObject);

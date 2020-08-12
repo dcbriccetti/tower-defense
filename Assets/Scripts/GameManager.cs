@@ -21,9 +21,11 @@ public class GameManager : MonoBehaviour {
     private CameraPositioner cameraPositioner;
     private MapFileProcessor.MapDescription map;
     private int selectedGunIndex;
+    private GunManager gunManager;
     
     private void Start() {
         cashManager = new CashManager(startingCash);
+        gunManager = GetComponent<GunManager>();
         map = MapFileProcessor.CreateMapDescription("Level1");
         CreateNodes();
         CreateGround();
@@ -38,9 +40,6 @@ public class GameManager : MonoBehaviour {
     /// Cycles among the enabled views
     /// </summary>
     public void ChangeView() => cameraPositioner.ChangeView();
-
-    public void ChooseSmallGun() => selectedGunIndex = 0;
-    public void ChooseCannon() => selectedGunIndex = 1;
 
     private void CreateGround() {
         var ground = Instantiate(groundPrefab);
@@ -106,12 +105,10 @@ public class GameManager : MonoBehaviour {
             Node node = nt.GetComponent<Node>();
             node.CashManager = cashManager;
             node.IsMouseClickAllowed = IsMouseClickAllowed;
-            node.SelectedGunIndex = SelectedGunIndex;
+            node.SelectedGunIndexProvider = () => gunManager.selectedGunIndex;
             node.NodeChangeListener = OnNodeChangeEvent;
         }
     }
     
     private bool IsMouseClickAllowed() => cameraPositioner.IsNormalView();
-    
-    private int SelectedGunIndex() => selectedGunIndex;
 }
