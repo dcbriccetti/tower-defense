@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99381c9bcada44ab7853f993eabe7e01, type: 3}
   m_Name: Wave3
   m_EditorClassIdentifier: 
-  numEnemies: 40
-  secondsBetweenEnemies: 0.87
+  numEnemies: 25
+  secondsBetweenEnemies: 1.5
   enemyPrefabs:
-  - {fileID: 1341356581414471054, guid: 675502652b6264fe3847d79c804562e6, type: 3}
+  - {fileID: 5867364826293567841, guid: 8b6c55358b3c64d658c70c4d4200fb45, type: 3}

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
-    [SerializeField] [Range(10, 200)] private int health = 100;
+    [SerializeField] [Range(10, 1000)] private int health = 100;
     [SerializeField] public int killValue = 5;
     [SerializeField] [Range(0, 20)] private float speedMetersPerSecond = 1;
     [SerializeField] [Range(1, 30)] public int rotationSpeed = 8;

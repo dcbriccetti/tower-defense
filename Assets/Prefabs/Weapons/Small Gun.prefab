@@ -399,7 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Small Gun
   shellPrefab: {fileID: 2233669301825109759, guid: 499f16aac13da433c9f337d8b1061067, type: 3}
-  damage: 10
+  damage: 8
   fireDelay: 0.1
   range: 3
   firingForce: 100
