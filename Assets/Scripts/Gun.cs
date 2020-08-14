@@ -18,6 +18,7 @@ public class Gun : MonoBehaviour {
     private float nextFireTime;
     private Light flash;
     private AudioSource audioSource;
+    public Transform target;
     private const float FlashDuration = 0.05f;
 
     private void Start() {
@@ -29,7 +30,8 @@ public class Gun : MonoBehaviour {
     }
 
     private void Update() {
-        var closest = EnemyManager.Instance.ClosestEnemyTo(transform.position, range);
+        var closest = EnemyManager.Instance.BestEnemyTarget(transform, range, Math.Min(0, nextFireTime - Time.time));
+        target = closest;
         if (closest == null) return;
 
         var aBitAhead = closest.forward * .2f;

@@ -40,8 +40,27 @@ public class Enemy : MonoBehaviour {
         var shell = collision.gameObject.GetComponent<Shell>();
         health -= shell.damage;
         shell.damage = 0; // Shells have been striking twice, somehow
-        if (health > 0) return;
-        enemyManager.Destroy(this, false);
-        alive = false;
+        if (health <= 0) {
+            enemyManager.Destroy(this, false);
+            alive = false;
+        } else {
+            var head = transform.Find("Head");
+            if (head != null) {
+                var animator = head.GetComponent<Animator>();
+                if (animator != null)
+                    animator.Play("Struck");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Where this enemy will be `seconds` seconds from now
+    /// </summary>
+    /// <param name="seconds">A number of seconds into the future</param>
+    /// <returns>Where this enemy will be</returns>
+    public Vector3 FuturePosition(float seconds) {
+        var tr = transform;
+        Vector3 p = tr.position + tr.forward * (speedMetersPerSecond * seconds);
+        return p;
     }
 }

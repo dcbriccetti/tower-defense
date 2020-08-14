@@ -404,6 +404,7 @@ MonoBehaviour:
   range: 3
   firingForce: 100
   rotationSpeed: 6
+  target: {fileID: 0}
 --- !u!1 &8541567755026405113
 GameObject:
   m_ObjectHideFlags: 0

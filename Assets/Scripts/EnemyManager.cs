@@ -62,11 +62,20 @@ public class EnemyManager : MonoBehaviour {
         ChangeListener(new AllWavesCompleted());
     }
 
-    public Transform ClosestEnemyTo(Vector3 position, float within) {
+    public Transform BestEnemyTarget(Transform gunTransform, float within, float secondsInFuture) {
+        var position = gunTransform.position;
+        Vector3 FuturePos(Transform a) => a.GetComponent<Enemy>().FuturePosition(secondsInFuture); // todo get this working
         var nearbyEnemies = enemies.Where(enemy =>
             (position - enemy.position).sqrMagnitude < within * within).ToList();
         if (nearbyEnemies.Count == 0) return null;
-        float SqMag(Transform a) => (position - a.position).sqrMagnitude;
-        return nearbyEnemies.Aggregate((a, b) => SqMag(a) < SqMag(b) ? a : b);
+
+        int cmp(Transform x, Transform y) {
+            float Angle(Transform t) => Quaternion.Angle(t.rotation, gunTransform.rotation);
+            return Angle(x).CompareTo(Angle(y));
+        }
+
+        nearbyEnemies.Sort(cmp);
+        return nearbyEnemies[0];
     }
+
 }
