@@ -23,13 +23,13 @@ public static class MapFileProcessor {
 
     private enum MapSymbol { Start = '0', End = '1', Path = '.', Node = '*' }
 
-    public static MapDescription CreateMapDescription(string mapName) {
+    public static MapDescription CreateMapDescription(int level) {
         var startPosition = Vector3.zero;
         var startCoords = Vector2.zero;
         var endCoords = Vector2.zero;
         var nodePositions = new List<Vector3>();
 
-        var mapLines = Resources.Load<TextAsset>($"Levels/{mapName}").text.Split('\n');
+        var mapLines = Resources.Load<TextAsset>($"Levels/{level}/map").text.Split('\n');
         var numRows = mapLines.Length;
         var numCols = mapLines[0].Length;
 

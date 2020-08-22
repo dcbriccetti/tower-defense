@@ -16,6 +16,11 @@ public class Node : MonoBehaviour {
         gunsContainer = transform.Find("/Instance Containers/Guns");
     }
 
+    private void OnDestroy() {
+        if (gun != null)
+            Destroy(gun.gameObject);
+    }
+
     private void OnMouseDown() {
         if (! IsMouseClickAllowed()) return;
         if (gun == null) {

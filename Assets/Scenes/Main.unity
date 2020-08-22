@@ -2367,6 +2367,9 @@ MonoBehaviour:
   camera: {fileID: 963194228}
   startingCash: 200
   lossPerEscape: 5
+  levelConfigs:
+  - {fileID: 11400000, guid: 8b78a73fba47343baa5ebf9cf030d94a, type: 2}
+  - {fileID: 11400000, guid: 25e31f13af60e460a9ddf73c1f5d3c32, type: 2}
 --- !u!4 &1627611053
 Transform:
   m_ObjectHideFlags: 0
@@ -2393,13 +2396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a625ea3ae4ed4989aaa059e72fb2f754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveConfigs:
-  - {fileID: 11400000, guid: b873d9134b3dc4d19ad592ec2f7def42, type: 2}
-  - {fileID: 11400000, guid: 598377704e3dd4032a608baec58cf44e, type: 2}
-  - {fileID: 11400000, guid: 67e63e54026d645d6a7a489c75eee36f, type: 2}
-  - {fileID: 11400000, guid: b9d30561804c94da087a83a82538c5a4, type: 2}
-  startingWaveIndex: 0
-  secondsBetweenWaves: 5
+  levelConfigs: []
 --- !u!114 &1627611055
 MonoBehaviour:
   m_ObjectHideFlags: 0

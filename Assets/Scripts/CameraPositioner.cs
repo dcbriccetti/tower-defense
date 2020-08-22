@@ -29,7 +29,7 @@ public class CameraPositioner : MonoBehaviour {
     /// Returns whether the current view is the normal one, i.e., the view from above
     public bool IsNormalView() => cameraView.GetType() == typeof(NormalView);
 
-    private void Start() {
+    public void SetCameraState() {
         cameraView = cameraViews[0];
         camera = Camera.main.transform;
         cameraState = new CameraState(camera.position, camera.rotation);

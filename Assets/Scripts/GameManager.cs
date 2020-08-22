@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private new Transform camera;
     [SerializeField] private int startingCash = 200;
     [SerializeField] private int lossPerEscape = 5;
+    [SerializeField] private LevelConfig[] levelConfigs;
     private EnemyManager enemyManager;
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;
@@ -22,15 +23,21 @@ public class GameManager : MonoBehaviour {
     private MapFileProcessor.MapDescription map;
     private int selectedGunIndex;
     private GunManager gunManager;
+    private int currentLevelIndex;
     
     private void Start() {
+        SetUpLevel();
+    }
+
+    private void SetUpLevel() {
         cashManager = new CashManager(startingCash);
         gunManager = GetComponent<GunManager>();
-        map = MapFileProcessor.CreateMapDescription("Level1");
+        map = MapFileProcessor.CreateMapDescription(currentLevelIndex + 1);
         CreateNodes();
         CreateGround();
         SetCameraNormalPosition();
         cameraPositioner = GetComponent<CameraPositioner>();
+        cameraPositioner.SetCameraState();
         SetUpEnemyManager();
         cashManager.AddChangeListener(UpdateStatusText);
         UpdateStatusText();
@@ -49,9 +56,11 @@ public class GameManager : MonoBehaviour {
 
     private void SetUpEnemyManager() {
         enemyManager = GetComponent<EnemyManager>();
+        enemyManager.levelConfigs = levelConfigs;
         enemyManager.StartPosition = map.StartPosition;
         enemyManager.Waypoints = map.Waypoints;
         enemyManager.ChangeListener = OnEnemiesChange;
+        enemyManager.StartLevel(currentLevelIndex);
     }
 
     private void UpdateStatusText() => statusText.text = 
@@ -68,7 +77,11 @@ public class GameManager : MonoBehaviour {
                 cashManager.Receive(-lossPerEscape);
                 break;
             case AllWavesCompleted awc:
-                GameOver();
+                if (currentLevelIndex < levelConfigs.Length - 1) {
+                    ++currentLevelIndex;
+                    SetUpLevel();
+                } else
+                    GameOver();
                 break;
         }
 
@@ -98,6 +111,9 @@ public class GameManager : MonoBehaviour {
 
     private void CreateNodes() {
         var nodesParentObject = transform.Find("/Instance Containers/Nodes");
+        for (int i = 0; i < nodesParentObject.childCount; ++i) {
+            Destroy(nodesParentObject.GetChild(i).gameObject);
+        }
         var nodeTransforms = map.NodePositions.Select(nodePos => Instantiate(nodePrefab, nodePos,
             nodePrefab.rotation, nodesParentObject));
         

@@ -8,7 +8,6 @@ public class Enemy : MonoBehaviour {
     [SerializeField] [Range(1, 30)] public int rotationSpeed = 8;
     public List<Vector2> Waypoints { get; set; }
     private int iNextWaypoint;
-    private readonly EnemyManager enemyManager = EnemyManager.instance;
     private WaypointTraveller wpt;
     private bool alive = true;
 
@@ -20,7 +19,7 @@ public class Enemy : MonoBehaviour {
 
     public void FixedUpdate() {
         if (transform.position.y < -10) { // Sometimes they fall off
-            enemyManager.Destroy(this, false);
+            EnemyManager.instance.Destroy(this, false);
             return;
         }
 
@@ -31,7 +30,7 @@ public class Enemy : MonoBehaviour {
         var toWaypoint = adjustedWaypoint - pos;
         if (toWaypoint.sqrMagnitude < 0.1)
             if (++iNextWaypoint == Waypoints.Count)
-                enemyManager.Destroy(this, true);
+                EnemyManager.instance.Destroy(this, true);
 
         transform.Translate(transform.forward * (speedMetersPerSecond * Time.deltaTime), Space.World);
     }
@@ -42,7 +41,7 @@ public class Enemy : MonoBehaviour {
         health -= shell.damage;
         shell.damage = 0; // Shells have been striking twice, somehow
         if (health <= 0) {
-            enemyManager.Destroy(this, false);
+            EnemyManager.instance.Destroy(this, false);
             alive = false;
         } else {
             var head = transform.Find("HeadPosition/Head");

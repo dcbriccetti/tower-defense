@@ -6,31 +6,36 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
     public static EnemyManager instance;
-    public WaveConfig[] waveConfigs;
-    public int startingWaveIndex;
-    public int secondsBetweenWaves = 10;
+    public LevelConfig[] levelConfigs;
     public int WaveNumber { get; private set; }
     public Vector3 StartPosition { private get; set; }
     public List<Vector2> Waypoints { private get; set; }
     private readonly List<GameObject> enemies = new List<GameObject>();
     private Transform enemiesParentObject;
     public Action<EnemiesChangeEvent> ChangeListener { get; set; }
+    private int currentLevelIndex = 0;
+    private WaveConfig[] waveConfigs;
     private WaveConfig currentWaveConfig;
 
     private void Start() {
         instance = this;
-        StartCoroutine(nameof(LaunchWaves));
         enemiesParentObject = transform.Find("/Instance Containers/Enemies");
     }
 
+    public void StartLevel(int levelIndex) {
+        currentLevelIndex = levelIndex;
+        waveConfigs = levelConfigs[currentLevelIndex].waveConfigs;
+        StartCoroutine(nameof(LaunchWaves));
+    }
+
     private IEnumerator LaunchWaves() {
-        for (int i = startingWaveIndex; i < waveConfigs.Length; i++) {
+        for (int i = levelConfigs[currentLevelIndex].startingWaveIndex; i < waveConfigs.Length; i++) {
             var waveConfig = waveConfigs[i];
             currentWaveConfig = waveConfig;
             ++WaveNumber;
             StartCoroutine(nameof(LaunchWave));
             ChangeListener(new WaveStarted());
-            yield return new WaitForSeconds(secondsBetweenWaves + waveConfig.numEnemies * waveConfig.secondsBetweenEnemies);
+            yield return new WaitForSeconds(levelConfigs[currentLevelIndex].secondsBetweenWaves + waveConfig.numEnemies * waveConfig.secondsBetweenEnemies);
         }
 
         StartCoroutine(nameof(EndWhenAllEnemiesAreGone));
