@@ -2398,6 +2398,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 598377704e3dd4032a608baec58cf44e, type: 2}
   - {fileID: 11400000, guid: 67e63e54026d645d6a7a489c75eee36f, type: 2}
   - {fileID: 11400000, guid: b9d30561804c94da087a83a82538c5a4, type: 2}
+  startingWaveIndex: 0
   secondsBetweenWaves: 5
 --- !u!114 &1627611055
 MonoBehaviour:

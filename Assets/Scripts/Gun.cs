@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Gun : MonoBehaviour {
-    public string name;
+    public new string name;
     [SerializeField] private Transform shellPrefab;
     [SerializeField] private int damage = 100;
     [SerializeField] private float fireDelay = 0.5f;
@@ -12,13 +12,14 @@ public class Gun : MonoBehaviour {
     [SerializeField] [Range(1, 10)] private int range = 3;
     [SerializeField] private int firingForce = 800;
     [SerializeField] [Range(1, 30)] private int rotationSpeed = 15;
+    public EnemyManager.TargetInfo? selectedTarget;
+    [SerializeField] private float nextFireTime;
 
     private Transform gunBody;
     private Transform firePoint;
-    private float nextFireTime;
     private Light flash;
     private AudioSource audioSource;
-    public Transform target;
+    private readonly EnemyManager enemyManager = EnemyManager.instance;
     private const float FlashDuration = 0.05f;
 
     private void Start() {
@@ -30,19 +31,26 @@ public class Gun : MonoBehaviour {
     }
 
     private void Update() {
-        var closest = EnemyManager.Instance.BestEnemyTarget(transform, range, Math.Min(0, nextFireTime - Time.time));
-        target = closest;
-        if (closest == null) return;
+        if (selectedTarget.HasValue && enemyManager.IsAlive(selectedTarget.Value.enemy)) {
+            var aim = selectedTarget.Value.futurePos - gunBody.position;
+            var interpolatedRotation = Quaternion.Lerp(gunBody.rotation, Quaternion.LookRotation(aim),
+                Time.deltaTime * rotationSpeed);
+            gunBody.rotation = interpolatedRotation;
+            var angleToAimPoint = Quaternion.Angle(Quaternion.LookRotation(aim), interpolatedRotation);
 
-        var aBitAhead = closest.forward * .2f;
-        var aim = closest.position + aBitAhead - gunBody.position;
-        var interpolatedRotation = Quaternion.Lerp(gunBody.rotation, Quaternion.LookRotation(aim), Time.deltaTime * rotationSpeed);
-        gunBody.rotation = interpolatedRotation;
-        var angleToAimPoint = Quaternion.Angle(Quaternion.LookRotation(aim), interpolatedRotation);
-
-        if (Math.Abs(angleToAimPoint) > 10 || Time.time < nextFireTime) return;
-        Fire();
-        nextFireTime = Time.time + fireDelay + Random.Range(-.01f, .01f);
+            if (Math.Abs(angleToAimPoint) < 2 && Time.time > nextFireTime) {
+                Debug.DrawLine(firePoint.position, selectedTarget.Value.futurePos, Color.red, 0.2f);
+                Fire();
+                nextFireTime = Time.time + fireDelay + Random.Range(0, .01f);
+                selectedTarget = null;
+            }
+        } else {
+            float secondsUntilFire = Math.Max(0, nextFireTime - Time.time);
+            var maybeBestTargetInfo = enemyManager.BestEnemyTarget(transform, range, secondsUntilFire);
+            if (! maybeBestTargetInfo.HasValue) return;
+            selectedTarget = maybeBestTargetInfo.Value;
+            Debug.DrawLine(firePoint.position, selectedTarget.Value.futurePos, Color.yellow, secondsUntilFire);
+        }
     }
 
     private void Fire() {

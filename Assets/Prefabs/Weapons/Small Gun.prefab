@@ -399,12 +399,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Small Gun
   shellPrefab: {fileID: 2233669301825109759, guid: 499f16aac13da433c9f337d8b1061067, type: 3}
-  damage: 8
+  damage: 10
   fireDelay: 0.1
   range: 3
-  firingForce: 100
+  firingForce: 112
   rotationSpeed: 6
-  target: {fileID: 0}
+  nextFireTime: 0
 --- !u!1 &8541567755026405113
 GameObject:
   m_ObjectHideFlags: 0

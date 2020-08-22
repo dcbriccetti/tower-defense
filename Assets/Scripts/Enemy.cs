@@ -8,10 +8,12 @@ public class Enemy : MonoBehaviour {
     [SerializeField] [Range(1, 30)] public int rotationSpeed = 8;
     public List<Vector2> Waypoints { get; set; }
     private int iNextWaypoint;
-    private readonly EnemyManager enemyManager = EnemyManager.Instance;
+    private readonly EnemyManager enemyManager = EnemyManager.instance;
+    private WaypointTraveller wpt;
     private bool alive = true;
 
-    private void Start() {
+    protected void Start() {
+        wpt = new WaypointTraveller(Waypoints);
         var w = Waypoints[0];
         transform.LookAt(new Vector3(w.x, transform.position.y, w.y));
     }
@@ -22,12 +24,11 @@ public class Enemy : MonoBehaviour {
             return;
         }
 
-        var waypoint = Waypoints[iNextWaypoint];
         var pos = transform.position;
-        var waypoint3 = new Vector3(waypoint.x, pos.y, waypoint.y);
-        Quaternion rotTo = Quaternion.LookRotation(waypoint3 - pos);
+        var adjustedWaypoint = wpt.GetAdjustedWaypoint(iNextWaypoint, pos.y);
+        Quaternion rotTo = Quaternion.LookRotation(adjustedWaypoint - pos);
         transform.rotation = Quaternion.Lerp(transform.rotation, rotTo, rotationSpeed * Time.deltaTime);
-        var toWaypoint = waypoint3 - pos;
+        var toWaypoint = adjustedWaypoint - pos;
         if (toWaypoint.sqrMagnitude < 0.1)
             if (++iNextWaypoint == Waypoints.Count)
                 enemyManager.Destroy(this, true);
@@ -44,7 +45,7 @@ public class Enemy : MonoBehaviour {
             enemyManager.Destroy(this, false);
             alive = false;
         } else {
-            var head = transform.Find("Head");
+            var head = transform.Find("HeadPosition/Head");
             if (head != null) {
                 var animator = head.GetComponent<Animator>();
                 if (animator != null)
@@ -59,8 +60,8 @@ public class Enemy : MonoBehaviour {
     /// <param name="seconds">A number of seconds into the future</param>
     /// <returns>Where this enemy will be</returns>
     public Vector3 FuturePosition(float seconds) {
-        var tr = transform;
-        Vector3 p = tr.position + tr.forward * (speedMetersPerSecond * seconds);
-        return p;
+        var distanceToTravel = speedMetersPerSecond * seconds;
+        var pos = wpt.PositionThroughWaypoints(transform.position, iNextWaypoint, distanceToTravel);
+        return new Vector3(pos.x, 0.2f, pos.z); // Don’t aim at my “feet”
     }
 }

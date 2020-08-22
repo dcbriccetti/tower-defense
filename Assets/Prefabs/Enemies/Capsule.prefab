@@ -206,8 +206,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7871decd539400389dd48fa01b6c248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  killValue: 2
+  health: 60
+  killValue: 5
   speedMetersPerSecond: 1
   rotationSpeed: 8
 --- !u!54 &-5691680304053650380

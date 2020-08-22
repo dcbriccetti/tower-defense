@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 
 /// Base class for camera views
 internal abstract class CameraView  {

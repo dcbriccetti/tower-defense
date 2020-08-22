@@ -48,10 +48,11 @@ MonoBehaviour:
   name: Cannon
   shellPrefab: {fileID: 2233669301825109759, guid: 499f16aac13da433c9f337d8b1061067, type: 3}
   damage: 100
-  fireDelay: 1
+  fireDelay: 2
   range: 3
   firingForce: 100
   rotationSpeed: 6
+  nextFireTime: 0
 --- !u!1 &2345524691697672111
 GameObject:
   m_ObjectHideFlags: 0
