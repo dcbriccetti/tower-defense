@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour {
     /// <returns>Where this enemy will be</returns>
     public Vector3 FuturePosition(float seconds) {
         var distanceToTravel = speedMetersPerSecond * seconds;
-        var pos = wpt.PositionThroughWaypoints(transform.position, iNextWaypoint, distanceToTravel);
+        var pos = wpt.PositionAfterTravel(transform.position, iNextWaypoint, distanceToTravel);
         return new Vector3(pos.x, 0.2f, pos.z); // Don’t aim at my “feet”
     }
 }
