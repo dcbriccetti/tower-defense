@@ -25,8 +25,8 @@ public class Node : MonoBehaviour {
         if (! IsMouseClickAllowed()) return;
         if (gun == null) {
             if (!CashManager.Buy(GunCostInDollars)) return;
-            NodeChangeListener(new GunAddedToNode());
             gun = Instantiate(gunPrefabs[SelectedGunIndexProvider()], transform.position, Quaternion.identity, gunsContainer);
+            NodeChangeListener(new GunAddedToNode(gun.gameObject));
         } else {
             CashManager.Receive(GunCostInDollars / 2);
             Destroy(gun.gameObject);

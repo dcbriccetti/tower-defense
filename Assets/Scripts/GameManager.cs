@@ -11,10 +11,12 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private Transform nodePrefab;
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private GameObject gameOverParent;
+    [SerializeField] private TMP_Text gameOverText;
     [SerializeField] private new Transform camera;
     [SerializeField] private int startingCash = 200;
     [SerializeField] private int lossPerEscape = 5;
     [SerializeField] private LevelConfig[] levelConfigs;
+    [SerializeField] private GameObject gunsFolder;
     private EnemyManager enemyManager;
     private int numEnemiesDestroyed;
     private int numEnemiesEscaped;
@@ -24,7 +26,8 @@ public class GameManager : MonoBehaviour {
     private int selectedGunIndex;
     private GunManager gunManager;
     private int currentLevelIndex;
-    
+    private float masterVolume = .5f;
+
     private void Start() {
         SetUpLevel();
     }
@@ -47,6 +50,22 @@ public class GameManager : MonoBehaviour {
     /// Cycles among the enabled views
     /// </summary>
     public void ChangeView() => cameraPositioner.ChangeView();
+
+    public void SetVolume(float volume) {
+        masterVolume = volume;
+        SetGunVolumes();
+    }
+
+    private void SetGunVolumes() {
+        foreach (var source in gunsFolder.GetComponentsInChildren<AudioSource>()) {
+            source.volume = masterVolume;
+        }
+    }
+
+    private void SetGunVolume(GameObject gun) {
+        gun.GetComponentInChildren<AudioSource>().volume = masterVolume;
+    }
+
 
     private void CreateGround() {
         var ground = Instantiate(groundPrefab);
@@ -81,17 +100,18 @@ public class GameManager : MonoBehaviour {
                     ++currentLevelIndex;
                     SetUpLevel();
                 } else
-                    GameOver();
+                    GameOver(cashManager.Dollars);
                 break;
         }
 
         UpdateStatusText();
     }
 
-    private static void OnNodeChangeEvent(NodeChangeEvent nodeChangeEvent) {
+    private void OnNodeChangeEvent(NodeChangeEvent nodeChangeEvent) {
         switch (nodeChangeEvent) {
             case GunAddedToNode gan:
                 DisableInstructions();
+                SetGunVolume(gan.gun);
                 break;
         }
     }
@@ -100,7 +120,11 @@ public class GameManager : MonoBehaviour {
         foreach (var inst in GameObject.FindGameObjectsWithTag("Instructions")) inst.SetActive(false);
     }
 
-    private void GameOver() => gameOverParent.SetActive(true);
+    private void GameOver(int cashManagerDollars) {
+        if (cashManagerDollars > 0)
+            gameOverText.text = "You Won!";
+        gameOverParent.SetActive(true);
+    }
 
     public void PlayAgain() => SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Todo get the button to call this again
 
