@@ -25,7 +25,7 @@ public class CameraPositioner : MonoBehaviour {
 
         cameraView = cameraViews[iCameraView];
     }
-    
+
     /// Returns whether the current view is the normal one, i.e., the view from above
     public bool IsNormalView() => cameraView.GetType() == typeof(NormalView);
 

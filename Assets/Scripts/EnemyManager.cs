@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
     public static EnemyManager instance;
-    public LevelConfig[] levelConfigs;
+    [NonSerialized] public LevelConfig[] levelConfigs;
     public int WaveNumber { get; private set; }
     public Vector3 StartPosition { private get; set; }
     public List<Vector2> Waypoints { private get; set; }

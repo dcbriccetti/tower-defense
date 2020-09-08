@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private GameObject gameOverParent;
     [SerializeField] private TMP_Text gameOverText;
-    [SerializeField] private new Transform camera;
     [SerializeField] private int startingCash = 200;
     [SerializeField] private int lossPerEscape = 5;
     [SerializeField] private LevelConfig[] levelConfigs;
@@ -27,8 +26,10 @@ public class GameManager : MonoBehaviour {
     private GunManager gunManager;
     private int currentLevelIndex;
     private float masterVolume = .5f;
+    private Transform normalCamera;
 
     private void Start() {
+        normalCamera = Camera.main.transform;
         SetUpLevel();
     }
 
@@ -129,8 +130,10 @@ public class GameManager : MonoBehaviour {
     public void PlayAgain() => SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Todo get the button to call this again
 
     private void SetCameraNormalPosition() {
-        Vector3 p = camera.position;
-        camera.position = new Vector3(map.Dimensions.x / 2f, p.y, p.z);
+        Camera.main.transform.position = normalCamera.position;
+        Camera.main.transform.rotation = normalCamera.rotation;
+        Vector3 p = normalCamera.position;
+        Camera.main.transform.position = new Vector3(map.Dimensions.x / 2f, p.y, p.z);
     }
 
     private void CreateNodes() {
